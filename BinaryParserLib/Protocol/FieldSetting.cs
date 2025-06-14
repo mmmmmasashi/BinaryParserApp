@@ -5,48 +5,47 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace BinaryParserLib.Protocol
+namespace BinaryParserLib.Protocol;
+
+public class FieldSetting
 {
-    public class FieldSetting
-    {
-        [JsonPropertyName("id")]
-        public string? Id { get; set; }
+    [JsonPropertyName("id")]
+    public string? Id { get; set; }
 
-        [JsonPropertyName("name")]
-        public string Name { get; set; } = "";
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = "";
 
-        [JsonPropertyName("type")]
-        public string Type { get; set; } = "bytes";
+    [JsonPropertyName("type")]
+    public string Type { get; set; } = "bytes";
 
-        //データ型によって決まることもあるので直接アクセスしない
+    //データ型によって決まることもあるので直接アクセスしない
 
-        [JsonPropertyName("size")]
-        public int? Size { get; set; } = 1;
+    [JsonPropertyName("size")]
+    public int? Size { get; set; } = 1;
 
-        [JsonPropertyName("repeat")]
-        public int? Repeat { get; set; } = null;
+    [JsonPropertyName("repeat")]
+    public int? Repeat { get; set; } = null;
 
-        [JsonPropertyName("repeatById")]
-        public string? RepeatById { get; set; }
+    [JsonPropertyName("repeatById")]
+    public string? RepeatById { get; set; }
 
-        public int ByteSize{
-            get
-            {
-                if (Type == "uint16") return 2;
-                if (Size.HasValue) return Size.Value;
-                throw new InvalidDataException("Field size is not defined.");
-            }
-        }
-
-
-        public FieldSetting() { }
-
-
-        internal FieldSetting CopyUsingNumber(int number)
+    public int ByteSize{
+        get
         {
-            var copy = (FieldSetting)this.MemberwiseClone();
-            copy.Name = $"{this.Name}({number})";
-            return copy;
+            if (Type == "uint16") return 2;
+            if (Size.HasValue) return Size.Value;
+            throw new InvalidDataException("Field size is not defined.");
         }
+    }
+
+
+    public FieldSetting() { }
+
+
+    internal FieldSetting CopyUsingNumber(int number)
+    {
+        var copy = (FieldSetting)this.MemberwiseClone();
+        copy.Name = $"{this.Name}({number})";
+        return copy;
     }
 }
