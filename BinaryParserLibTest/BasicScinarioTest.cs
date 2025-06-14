@@ -57,5 +57,28 @@ namespace BinaryParserLibTest
             Assert.Equal("0203", field2.HexStr);
         }
 
+        [Fact]
+        public void repeat機能で同じブロックを固定数繰り返すこと()
+        {
+            var result = ParseBySettingAndBin("010_repeat.json", "010_repeat.bin");
+            Assert.Equal(2 + 3, result.RootFields.Count);
+
+            //"1field", サイズ1が2回繰り返される
+            Assert.Equal("01", result.RootFields[0].HexStr);
+            Assert.Equal("1field(1)", result.RootFields[0].Name);
+
+            Assert.Equal("02", result.RootFields[1].HexStr);
+            Assert.Equal("1field(2)", result.RootFields[1].Name);
+
+            //"2fields", サイズ2が3回繰り返される
+            Assert.Equal("0304", result.RootFields[2].HexStr);
+            Assert.Equal("2fields(1)", result.RootFields[2].Name);
+
+            Assert.Equal("0506", result.RootFields[3].HexStr);
+            Assert.Equal("2fields(2)", result.RootFields[3].Name);
+
+            Assert.Equal("0708", result.RootFields[4].HexStr);
+            Assert.Equal("2fields(3)", result.RootFields[4].Name);
+        }
     }
 }

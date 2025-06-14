@@ -18,6 +18,9 @@ namespace BinaryParserLib.Protocol
         [JsonPropertyName("size")]
         public int? Size { get; set; } = 1;
 
+        [JsonPropertyName("repeat")]
+        public int? Repeat { get; set; } = null;
+
 
         public FieldSetting() { }
         public FieldSetting(string name, string type, int size)
@@ -25,6 +28,16 @@ namespace BinaryParserLib.Protocol
             Name = name;
             Type = type;
             Size = size;
+        }
+
+        internal FieldSetting CopyUsingNumber(int number)
+        {
+            return new FieldSetting
+            {
+                Name = $"{this.Name}({number})",
+                Size = this.Size,
+                Type = this.Type
+            };
         }
     }
 }

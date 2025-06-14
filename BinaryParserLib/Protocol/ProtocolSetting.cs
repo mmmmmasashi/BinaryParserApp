@@ -12,8 +12,10 @@ namespace BinaryParserLib.Protocol
         public static ProtocolSetting FromJsonFile(string filePath)
         {
             var jsonContent = File.ReadAllText(filePath);
-            return System.Text.Json.JsonSerializer.Deserialize<ProtocolSetting>(jsonContent) 
+            var settingRaw = System.Text.Json.JsonSerializer.Deserialize<ProtocolSetting>(jsonContent) 
                 ?? throw new InvalidOperationException("Failed to deserialize ProtocolSetting from JSON file.");
+
+            return settingRaw.ExpandFieldsWithRepeatCount();
         }
 
         [JsonPropertyName("protocolName")]
@@ -22,5 +24,25 @@ namespace BinaryParserLib.Protocol
         
         [JsonPropertyName("structure")]
         public List<FieldSetting> Structure { get; set; } = new List<FieldSetting>();
+
+        private ProtocolSetting ExpandFieldsWithRepeatCount()
+        {
+            return new ProtocolSetting
+            {
+                ProtocolName = this.ProtocolName,
+                Structure = this.Structure.SelectMany(field =>
+                {
+                    if (field.Repeat.HasValue && field.Repeat > 1)
+                    {
+                        return Enumerable.Range(0, field.Repeat.Value).Select(i => field.CopyUsingNumber(i + 1));
+                    }
+                    else
+                    {
+                        return new[] { field };
+                    }
+                }).ToList()
+            };
+        }
+
     }
 }

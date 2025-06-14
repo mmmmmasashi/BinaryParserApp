@@ -1,0 +1,15 @@
+﻿{
+	"protocolName": "複数フィールドプロトコル",
+	"structure": [
+		{
+			"size": 1,
+			"name": "1field",
+			"repeat": 2
+		},
+		{
+			"size": 2,
+			"name": "2fields",
+			"repeat": 3
+		}
+	]
+}

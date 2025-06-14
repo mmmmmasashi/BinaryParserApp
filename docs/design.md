@@ -48,7 +48,7 @@
     "type": "uint8"
   },
   {
-    "id": "SensorCount",
+"id": "SensorCount",
     "label": "センサー数",
     "type": "uint8"
   },
