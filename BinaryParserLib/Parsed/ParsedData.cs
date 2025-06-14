@@ -8,6 +8,13 @@ namespace BinaryParserLib.Parsed
 {
     public class ParsedData
     {
-        public string? ProtocolName { get; } = "Protocol X";
+        public string? ProtocolName { get; }
+        public List<Field> RootFields { get; internal set; }
+
+        public ParsedData()
+        {
+            ProtocolName = "Protocol X";
+            RootFields = new List<Field>() { new Field() };
+        }
     }
 }
