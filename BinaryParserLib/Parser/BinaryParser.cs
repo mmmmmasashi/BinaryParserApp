@@ -9,14 +9,9 @@ using System.Threading.Tasks;
 
 namespace BinaryParserLib.Parser;
 
-public class BinaryParser
+public class BinaryParser(ProtocolSetting setting)
 {
-    private ProtocolSetting setting;
-
-    public BinaryParser(ProtocolSetting setting)
-    {
-        this.setting = setting;
-    }
+    private readonly ProtocolSetting _setting = setting;
 
     internal ParsedData ParseBinaryFile(string filePath)
     {
@@ -24,7 +19,7 @@ public class BinaryParser
         var fieldList = new List<Field>();
         var idxCurrent = 0;
 
-        foreach (var eachRawSetting in this.setting.Structure)
+        foreach (var eachRawSetting in _setting.Structure)
         {
             List<FieldSetting> expandedSettings = ExpandRepeatById(eachRawSetting, fieldList);
             foreach (var eachSetting in expandedSettings)
@@ -37,18 +32,18 @@ public class BinaryParser
             }
         }
 
-        return new ParsedData(this.setting.ProtocolName, fieldList.ToArray());
+        return new ParsedData(_setting.ProtocolName, fieldList.ToArray());
     }
 
     private List<FieldSetting> ExpandRepeatById(FieldSetting eachRawSetting, List<Field> fieldList)
     {
         //可変サイズの場合
-        if (eachRawSetting.RepeatById != null)
+        if (eachRawSetting.RepeatById is string repeatById)
         {
-            var repeatField = fieldList.FirstOrDefault(f => f?.Id == eachRawSetting.RepeatById);
+            var repeatField = fieldList.FirstOrDefault(f => f?.Id == repeatById);
             if (repeatField == null)
             {
-                throw new InvalidOperationException($"Repeat field '{eachRawSetting.RepeatById}' not found in parsed fields.");
+                throw new InvalidOperationException($"Repeat field '{repeatById}' not found in parsed fields.");
             }
             //符号なし16bitのバイト列を前提に解釈
             int repeatCount =  BitConverter.ToInt16(repeatField.Bytes);
@@ -56,6 +51,7 @@ public class BinaryParser
             return Enumerable.Range(1, repeatCount).Select(number => eachRawSetting.CopyUsingNumber(number)).ToList();
         }
 
+        //nullの場合
         return new List<FieldSetting>() { eachRawSetting };
     }
 

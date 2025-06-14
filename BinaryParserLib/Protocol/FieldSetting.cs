@@ -10,24 +10,24 @@ namespace BinaryParserLib.Protocol;
 public class FieldSetting
 {
     [JsonPropertyName("id")]
-    public string? Id { get; set; }
+    public string? Id { get; init; }
 
     [JsonPropertyName("name")]
     public string Name { get; set; } = "";
 
     [JsonPropertyName("type")]
-    public string Type { get; set; } = "bytes";
+    public string Type { get; init; } = "bytes";
 
     //データ型によって決まることもあるので直接アクセスしない
 
     [JsonPropertyName("size")]
-    public int? Size { get; set; } = 1;
+    public int? Size { get; init; } = 1;
 
     [JsonPropertyName("repeat")]
-    public int? Repeat { get; set; } = null;
+    public int? Repeat { get; init; } = null;
 
     [JsonPropertyName("repeatById")]
-    public string? RepeatById { get; set; }
+    public string? RepeatById { get; init; }
 
     public int ByteSize{
         get

@@ -19,11 +19,11 @@ public class ProtocolSetting
     }
 
     [JsonPropertyName("protocolName")]
-    public string? ProtocolName { get; set; }
+    public string? ProtocolName { get; init; }
 
     
     [JsonPropertyName("structure")]
-    public List<FieldSetting> Structure { get; set; } = new List<FieldSetting>();
+    public List<FieldSetting> Structure { get; init; } = new List<FieldSetting>();
 
     private ProtocolSetting ExpandFieldsWithRepeatCount()
     {
@@ -39,9 +39,8 @@ public class ProtocolSetting
                     repeatCount = field.Repeat.Value;
                 }
 
-                if (repeatCount == null) return new List<FieldSetting> { field };
-
-                return Enumerable.Range(0, repeatCount.Value).Select(i => field.CopyUsingNumber(i + 1));
+                return repeatCount is null? new List<FieldSetting> { field }:
+                        Enumerable.Range(0, repeatCount.Value).Select(i => field.CopyUsingNumber(i + 1));
 
             }).ToList()
         };
