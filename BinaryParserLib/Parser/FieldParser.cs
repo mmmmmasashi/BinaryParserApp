@@ -56,6 +56,16 @@ internal class FieldParser
                 ParseField(reader, copiedBlockSetting, fieldListCurrent);
             }
         }
+        //可変サイズリピートの場合
+        else if (setting.RepeatById is string repeatById)
+        {
+            int repeatCount = FindRepeatCount(fieldListCurrent, repeatById);
+            foreach (var number in Enumerable.Range(1, repeatCount))
+            {
+                var copiedBlockSetting = setting.RenameByRepeat(number);
+                ParseField(reader, copiedBlockSetting, fieldListCurrent);
+            }
+        }
         else
         {
             //1つのブロックが渡される
@@ -82,14 +92,7 @@ internal class FieldParser
 
     private void ParseVariableSizeRepeatFields(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent, string repeatById)
     {
-        var repeatField = fieldListCurrent.FirstOrDefault(f => f?.Id == repeatById);
-        if (repeatField == null)
-        {
-            throw new InvalidOperationException($"Repeat field '{repeatById}' not found in parsed fields.");
-        }
-
-        //符号なし16bitのバイト列を前提に解釈
-        int repeatCount = BitConverter.ToInt16(repeatField.Bytes);
+        int repeatCount = FindRepeatCount(fieldListCurrent, repeatById);
 
         var expandedSettingList = Enumerable.Range(1, repeatCount).Select(number => setting.RenameByRepeat(number)).ToList();
         var ans = new List<Field>();
@@ -97,6 +100,18 @@ internal class FieldParser
         {
             ParseField(reader, eachSetting, fieldListCurrent);
         }
+    }
+
+    private static int FindRepeatCount(List<Field> fieldListCurrent, string repeatById)
+    {
+        var repeatField = fieldListCurrent.FirstOrDefault(f => f?.Id == repeatById);
+        if (repeatField == null)
+        {
+            throw new InvalidOperationException($"Repeat field '{repeatById}' not found in parsed fields.");
+        }
+
+        //TODO:違う階層にID指定があった場合に取れない？
+        return repeatField.ParseToInt();
     }
 
     private void ParseFixedSizeRepeatFields(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent, int repeatFixedCount)

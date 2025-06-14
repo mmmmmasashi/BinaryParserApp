@@ -36,6 +36,7 @@ public class FieldSetting
         get
         {
             if (Type == "uint16") return 2;
+            if (Type == "uint8") return 1;
             if (Size.HasValue) return Size.Value;
             throw new InvalidDataException("Field size is not defined.");
         }

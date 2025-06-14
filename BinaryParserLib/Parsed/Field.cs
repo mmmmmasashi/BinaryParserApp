@@ -28,4 +28,11 @@ public class Field
     {
         return new Field(id, name, null, children);
     }
+
+    internal int ParseToInt()
+    {
+        if (this.Bytes is null) throw new InvalidOperationException("Bytes is null.");
+        if (Bytes.Length == 1) return BitConverter.ToInt16(new byte[] { Bytes[0], 0x00 });
+        return BitConverter.ToInt16(Bytes);
+    }
 }

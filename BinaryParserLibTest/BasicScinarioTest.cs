@@ -138,4 +138,29 @@ public class BasicScinarioTest
             }
         }
     }
+
+    [Fact]
+    public void Blockのフィールドに応じた数繰り返し_ブロック数2()
+    {
+        var result = ParseBySettingAndBin("022_block_repeat_fieldsize.json", "022_block_repeat_fieldsize.bin");
+        Assert.Equal(1 + 2, result.RootFields.Count);
+        Assert.Equal("sample", result.RootFields[0].Name);
+        Assert.Equal("02", result.RootFields[0].HexStr);
+
+        Assert.Equal("blockName(1)", result.RootFields[1].Name);
+        Assert.Equal("blockName(2)", result.RootFields[2].Name);
+
+        for (int i = 1; i <= 2; i++)
+        {
+            var blockChildren = result.RootFields[i].Children;
+            {
+                Assert.Equal(2, blockChildren.Count);
+                Assert.Equal("1field", blockChildren[0].Name);
+                Assert.Equal("2fields", blockChildren[1].Name);
+
+                Assert.Equal("01", blockChildren[0].HexStr);
+                Assert.Equal("0102", blockChildren[1].HexStr);
+            }
+        }
+    }
 }
