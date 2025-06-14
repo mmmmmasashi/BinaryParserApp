@@ -17,8 +17,16 @@ internal class FieldParser
         {
             ParseBlockField(reader, setting, fieldListCurrent);
         }
+        else
+        {
+            ParseNonBlockField(reader, setting, fieldListCurrent);
+        }
+    }
+
+    private void ParseNonBlockField(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent)
+    {
         //固定サイズの場合
-        else if (setting.Repeat is int repeatFixedCount && repeatFixedCount > 0)
+        if (setting.Repeat is int repeatFixedCount && repeatFixedCount > 0)
         {
             ParseFixedSizeRepeatFields(reader, setting, fieldListCurrent, repeatFixedCount);
         }
@@ -35,16 +43,34 @@ internal class FieldParser
 
     private void ParseBlockField(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent)
     {
-        var children = new List<Field>();
-
         var content = setting.Content;
         if (content == null) throw new InvalidDataException();//空のブロック？
-        foreach (var eachSetting in content)
-        {
-            ParseField(reader, eachSetting, children);
-        }
 
-        fieldListCurrent.Add(Field.CreateBlock(setting.Id, setting.Name, children));
+        //固定サイズリピートの場合
+        if (setting.Repeat is int repeatFixedCount && repeatFixedCount > 0)
+        {
+            //ブロック名をリネームしてコピー
+            foreach (var number in Enumerable.Range(1, repeatFixedCount))
+            {
+                var copiedBlockSetting = setting.RenameByRepeat(number);
+                ParseField(reader, copiedBlockSetting, fieldListCurrent);
+            }
+        }
+        else
+        {
+            //1つのブロックが渡される
+
+            //ブロック内の各フィールドを再帰的に解析
+            var children = new List<Field>();
+            foreach (var eachSetting in content)
+            {
+                ParseNonBlockField(reader, eachSetting, children);
+            }
+
+            //それを子にもつブロックフィールドを一つ作り、渡されたリストに並列に追加する
+            var blockField = Field.CreateBlock(setting.Id, setting.Name, children);
+            fieldListCurrent.Add(blockField);
+        }
     }
 
     private static void ParseSingleField(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent)

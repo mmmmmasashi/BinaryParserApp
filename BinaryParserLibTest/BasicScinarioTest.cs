@@ -112,4 +112,30 @@ public class BasicScinarioTest
             Assert.Equal("0102", blockChildren[1].HexStr);
         }
     }
+
+    [Fact]
+    public void Block‚ÌŒÅ’è”ŒJ‚è•Ô‚µ_ƒuƒƒbƒN”3()
+    {
+        var result = ParseBySettingAndBin("021_block_repeat.json", "021_block_repeat.bin");
+        Assert.Equal(1 + 3, result.RootFields.Count);
+        Assert.Equal("sample", result.RootFields[0].Name);
+        Assert.Equal("00", result.RootFields[0].HexStr);
+
+        Assert.Equal("blockName(1)", result.RootFields[1].Name);
+        Assert.Equal("blockName(2)", result.RootFields[2].Name);
+        Assert.Equal("blockName(3)", result.RootFields[3].Name);
+
+        for (int i = 1; i <= 3; i++)
+        {
+            var blockChildren = result.RootFields[i].Children;
+            {
+                Assert.Equal(2, blockChildren.Count);
+                Assert.Equal("1field", blockChildren[0].Name);
+                Assert.Equal("2fields", blockChildren[1].Name);
+
+                Assert.Equal("01", blockChildren[0].HexStr);
+                Assert.Equal("0102", blockChildren[1].HexStr);
+            }
+        }
+    }
 }
