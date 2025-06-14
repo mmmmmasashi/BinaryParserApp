@@ -11,10 +11,10 @@ namespace BinaryParserLib.Parsed
         public string? ProtocolName { get; }
         public List<Field> RootFields { get; internal set; }
 
-        public ParsedData()
+        public ParsedData(string? protocolName, params Field[] fields)
         {
-            ProtocolName = "Protocol X";
-            RootFields = new List<Field>() { new Field() };
+            ProtocolName = protocolName;
+            RootFields = fields.ToList();
         }
     }
 }

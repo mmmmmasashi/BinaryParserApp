@@ -19,7 +19,9 @@ namespace BinaryParserLib.Parser
 
         internal ParsedData ParseBinaryFile(string filePath)
         {
-            return new ();
+            var binData = File.ReadAllBytes(filePath);
+            var data = Enumerable.Range(0, this.setting.Structure.First().Size ?? 1).Select(idx => binData[idx]);
+            return new ParsedData(setting.ProtocolName, new Field(this.setting.Structure.First().Name, data.ToArray()));
         }
     }
 }
