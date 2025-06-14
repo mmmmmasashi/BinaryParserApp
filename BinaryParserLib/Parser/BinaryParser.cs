@@ -13,7 +13,7 @@ public class BinaryParser(ProtocolSetting setting)
 {
     private readonly ProtocolSetting _setting = setting;
 
-    internal ParsedData ParseBinaryFile(string filePath)
+    public ParsedData ParseBinaryFile(string filePath)
     {
         var reader = new BinaryReader(new MemoryStream(File.ReadAllBytes(filePath)));
         var fieldList = new List<Field>();

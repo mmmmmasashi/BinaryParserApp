@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BinaryParserLib.Text;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,13 +8,21 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BinaryParserLib.Parsed;
 
-public class Field
+public class Field : ITreeNode<Field>
 {
     public string? Id { get; }
     public string Name { get; }
-    public string HexStr { get => string.Concat(Bytes.Select(b => b.ToString("x2"))); }
+    public string HexStr { get => (Bytes is null)? "--" : string.Concat(Bytes.Select(b => b.ToString("x2"))); }
     public byte[]? Bytes { get; }
     public List<Field> Children { get; }
+
+    public string ToLine()
+    {
+        //Name, HexStrをつなげて出力。ない場合は"--"に置き換える
+        string namePart = string.IsNullOrEmpty(Name) ? "--" : Name;
+        string hexPart = string.IsNullOrEmpty(HexStr) ? "--" : HexStr;
+        return $"{namePart} : {hexPart}";
+    }
 
     public Field(string? id, string name, byte[]? data, List<Field>? children = null)
     {

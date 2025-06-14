@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryParserLib", "BinaryPa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryParserLibTest", "BinaryParserLibTest\BinaryParserLibTest.csproj", "{2FC0B83B-72FB-4B0C-8421-4B2023C3E2E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryParserConsoleApp", "BinaryParserConsoleApp\BinaryParserConsoleApp.csproj", "{8A26F630-C3E0-405F-B1BB-E68D6B040FD6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{2FC0B83B-72FB-4B0C-8421-4B2023C3E2E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FC0B83B-72FB-4B0C-8421-4B2023C3E2E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FC0B83B-72FB-4B0C-8421-4B2023C3E2E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A26F630-C3E0-405F-B1BB-E68D6B040FD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A26F630-C3E0-405F-B1BB-E68D6B040FD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A26F630-C3E0-405F-B1BB-E68D6B040FD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A26F630-C3E0-405F-B1BB-E68D6B040FD6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
