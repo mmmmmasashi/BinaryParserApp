@@ -23,13 +23,18 @@ public class BinaryParser(ProtocolSetting setting)
             List<FieldSetting> expandedSettings = ExpandRepeatById(eachRawSetting, fieldList);
             foreach (var eachSetting in expandedSettings)
             {
-                var byteSize = eachSetting.ByteSize;
-                var fieldData = reader.ReadBytes(byteSize).ToArray();
-                fieldList.Add(new Field(eachSetting.Id, eachSetting.Name, fieldData));
+                fieldList.Add(ParseField(reader, eachSetting));
             }
         }
 
         return new ParsedData(_setting.ProtocolName, fieldList.ToArray());
+    }
+
+    private Field ParseField(BinaryReader reader, FieldSetting setting)
+    {
+        var byteSize = setting.ByteSize;
+        var fieldData = reader.ReadBytes(byteSize).ToArray();
+        return new Field(setting.Id, setting.Name, fieldData);
     }
 
     private List<FieldSetting> ExpandRepeatById(FieldSetting eachRawSetting, List<Field> fieldList)
