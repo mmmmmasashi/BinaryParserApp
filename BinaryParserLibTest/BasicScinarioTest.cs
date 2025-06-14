@@ -91,4 +91,18 @@ public class BasicScinarioTest
         Assert.Equal("0300", result.RootFields[0].HexStr);
 
     }
+
+    [Fact]
+    public void Block‚Ì“±“ü_ƒuƒƒbƒN”1()
+    {
+        var result = ParseBySettingAndBin("020_block.json", "020_block.bin");
+        Assert.Equal(2, result.RootFields.Count);
+        
+        Assert.Equal("sample", result.RootFields[0].Name);
+        Assert.Equal("00", result.RootFields[0].HexStr);
+
+        Assert.Equal("blockName", result.RootFields[1].Name);
+        Assert.Equal(2, result.RootFields[1].Children.Count);
+
+    }
 }

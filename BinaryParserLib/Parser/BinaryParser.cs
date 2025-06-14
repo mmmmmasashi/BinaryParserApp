@@ -15,9 +15,8 @@ public class BinaryParser(ProtocolSetting setting)
 
     internal ParsedData ParseBinaryFile(string filePath)
     {
-        var binData = File.ReadAllBytes(filePath);
+        var reader = new BinaryReader(new MemoryStream(File.ReadAllBytes(filePath)));
         var fieldList = new List<Field>();
-        var idxCurrent = 0;
 
         foreach (var eachRawSetting in _setting.Structure)
         {
@@ -25,10 +24,8 @@ public class BinaryParser(ProtocolSetting setting)
             foreach (var eachSetting in expandedSettings)
             {
                 var byteSize = eachSetting.ByteSize;
-                var fieldData = binData.Skip(idxCurrent).Take(byteSize).ToArray();
-                idxCurrent += byteSize;
+                var fieldData = reader.ReadBytes(byteSize).ToArray();
                 fieldList.Add(new Field(eachSetting.Id, eachSetting.Name, fieldData));
-
             }
         }
 
@@ -45,6 +42,7 @@ public class BinaryParser(ProtocolSetting setting)
             {
                 throw new InvalidOperationException($"Repeat field '{repeatById}' not found in parsed fields.");
             }
+
             //符号なし16bitのバイト列を前提に解釈
             int repeatCount =  BitConverter.ToInt16(repeatField.Bytes);
 
