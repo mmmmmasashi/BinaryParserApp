@@ -1,7 +1,9 @@
 using BinaryParserLib.Parsed;
 using BinaryParserLib.Parser;
 using BinaryParserLib.Protocol;
+using System;
 using System.Text.Json;
+using Xunit;
 
 namespace BinaryParserLibTest
 {
@@ -37,6 +39,22 @@ namespace BinaryParserLibTest
 
             Assert.Equal("Hello bytes!", field.Name);
             Assert.Equal("0102", field.HexStr);
+        }
+
+        [Fact]
+        public void 複数フィールドある場合も読めること()
+        {
+            var result = ParseBySettingAndBin("003_multi_fields.json", "003_multi_fields.bin");
+            Assert.Equal("複数フィールドプロトコル", result.ProtocolName);
+            Assert.Equal(2, result.RootFields.Count);
+
+            var field1 = result.RootFields[0];
+            Assert.Equal("1field", field1.Name);
+            Assert.Equal("01", field1.HexStr);
+
+            var field2 = result.RootFields[1];
+            Assert.Equal("2fields", field2.Name);
+            Assert.Equal("0203", field2.HexStr);
         }
 
     }

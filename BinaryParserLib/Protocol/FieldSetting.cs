@@ -13,7 +13,7 @@ namespace BinaryParserLib.Protocol
         public string Name { get; set; } = "";
 
         [JsonPropertyName("type")]
-        public string Type { get; set; } = "int";
+        public string Type { get; set; } = "bytes";
 
         [JsonPropertyName("size")]
         public int? Size { get; set; } = 1;
