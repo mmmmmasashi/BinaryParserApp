@@ -50,21 +50,13 @@ internal class FieldParser
         if (setting.Repeat is int repeatFixedCount && repeatFixedCount > 0)
         {
             //ブロック名をリネームしてコピー
-            foreach (var number in Enumerable.Range(1, repeatFixedCount))
-            {
-                var copiedBlockSetting = setting.RenameByRepeat(number);
-                ParseField(reader, copiedBlockSetting, fieldListCurrent);
-            }
+            ParseCopiedBlock(reader, setting, fieldListCurrent, repeatFixedCount);
         }
         //可変サイズリピートの場合
         else if (setting.RepeatById is string repeatById)
         {
             int repeatCount = FindRepeatCount(fieldListCurrent, repeatById);
-            foreach (var number in Enumerable.Range(1, repeatCount))
-            {
-                var copiedBlockSetting = setting.RenameByRepeat(number);
-                ParseField(reader, copiedBlockSetting, fieldListCurrent);
-            }
+            ParseCopiedBlock(reader, setting, fieldListCurrent, repeatCount);
         }
         else
         {
@@ -80,6 +72,15 @@ internal class FieldParser
             //それを子にもつブロックフィールドを一つ作り、渡されたリストに並列に追加する
             var blockField = Field.CreateBlock(setting.Id, setting.Name, children);
             fieldListCurrent.Add(blockField);
+        }
+    }
+
+    private void ParseCopiedBlock(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent, int repeatCount)
+    {
+        foreach (var number in Enumerable.Range(1, repeatCount))
+        {
+            var copiedBlockSetting = setting.RenameByRepeat(number);
+            ParseField(reader, copiedBlockSetting, fieldListCurrent);
         }
     }
 
