@@ -9,11 +9,16 @@ namespace BinaryParserLib.Protocol
 {
     public class FieldSetting
     {
+        [JsonPropertyName("id")]
+        public string? Id { get; set; }
+
         [JsonPropertyName("name")]
         public string Name { get; set; } = "";
 
         [JsonPropertyName("type")]
         public string Type { get; set; } = "bytes";
+
+        //データ型によって決まることもあるので直接アクセスしない
 
         [JsonPropertyName("size")]
         public int? Size { get; set; } = 1;
@@ -21,23 +26,27 @@ namespace BinaryParserLib.Protocol
         [JsonPropertyName("repeat")]
         public int? Repeat { get; set; } = null;
 
+        [JsonPropertyName("repeatById")]
+        public string? RepeatById { get; set; }
+
+        public int ByteSize{
+            get
+            {
+                if (Type == "uint16") return 2;
+                if (Size.HasValue) return Size.Value;
+                throw new InvalidDataException("Field size is not defined.");
+            }
+        }
+
 
         public FieldSetting() { }
-        public FieldSetting(string name, string type, int size)
-        {
-            Name = name;
-            Type = type;
-            Size = size;
-        }
+
 
         internal FieldSetting CopyUsingNumber(int number)
         {
-            return new FieldSetting
-            {
-                Name = $"{this.Name}({number})",
-                Size = this.Size,
-                Type = this.Type
-            };
+            var copy = (FieldSetting)this.MemberwiseClone();
+            copy.Name = $"{this.Name}({number})";
+            return copy;
         }
     }
 }

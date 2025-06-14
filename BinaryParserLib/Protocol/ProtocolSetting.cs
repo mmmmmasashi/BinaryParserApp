@@ -32,14 +32,17 @@ namespace BinaryParserLib.Protocol
                 ProtocolName = this.ProtocolName,
                 Structure = this.Structure.SelectMany(field =>
                 {
-                    if (field.Repeat.HasValue && field.Repeat > 1)
+                    int? repeatCount = null;
+                    
+                    if (field.Repeat.HasValue && field.Repeat.Value > 1)
                     {
-                        return Enumerable.Range(0, field.Repeat.Value).Select(i => field.CopyUsingNumber(i + 1));
+                        repeatCount = field.Repeat.Value;
                     }
-                    else
-                    {
-                        return new[] { field };
-                    }
+
+                    if (repeatCount == null) return new List<FieldSetting> { field };
+
+                    return Enumerable.Range(0, repeatCount.Value).Select(i => field.CopyUsingNumber(i + 1));
+
                 }).ToList()
             };
         }

@@ -9,12 +9,14 @@ namespace BinaryParserLib.Parsed
 {
     public class Field
     {
+        public string? Id { get; }
         public string Name { get; }
-        public string HexStr { get => string.Concat(bytes.Select(b => b.ToString("x2"))); }
-        public byte[] bytes { get; }
-        public Field(string name, params byte[] data)
+        public string HexStr { get => string.Concat(Bytes.Select(b => b.ToString("x2"))); }
+        public byte[] Bytes { get; }
+        public Field(string? id, string name, params byte[] data)
         {
-            bytes = data;
+            Id = id;
+            Bytes = data;
             Name = name;
         }
     }

@@ -31,6 +31,12 @@
     <None Update="TestData\001_minset.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\011_repeat_by_field.bin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\011_repeat_by_field.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\010_repeat.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

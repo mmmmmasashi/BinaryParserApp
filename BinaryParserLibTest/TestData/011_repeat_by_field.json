@@ -1,0 +1,15 @@
+﻿{
+	"protocolName": "読み取った数で繰り返す",
+	"structure": [
+		{
+			"id": "this-is-a-unique-id",
+			"type": "uint16",
+			"name": "block-num"
+		},
+		{
+			"size": 2,
+			"name": "2fields",
+			"repeatById": "this-is-a-unique-id"
+		}
+	]
+}

@@ -80,5 +80,16 @@ namespace BinaryParserLibTest
             Assert.Equal("0708", result.RootFields[4].HexStr);
             Assert.Equal("2fields(3)", result.RootFields[4].Name);
         }
+
+        [Fact]
+        public void 別フィールドで指定した数値をもとにブロック数を繰り返す()
+        {
+            var result = ParseBySettingAndBin("011_repeat_by_field.json", "011_repeat_by_field.bin");
+            Assert.Equal(1 + 3, result.RootFields.Count);
+
+            Assert.Equal("block-num", result.RootFields[0].Name);
+            Assert.Equal("0300", result.RootFields[0].HexStr);
+
+        }
     }
 }
