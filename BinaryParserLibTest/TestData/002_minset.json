@@ -1,0 +1,10 @@
+﻿{
+	"protocolName": "Protocol Y",
+	"structure": [
+		{
+			"type": "bytes",
+			"size": 2,
+			"name": "Hello bytes!"
+		}
+	]
+}

@@ -1,0 +1,25 @@
+﻿{
+	"protocolName": "サンプル",
+	"structure": [
+    {
+      "name": "sample",
+      "type": "uint8",
+      "id":  "fieldsizeid"
+    },
+		{
+      "type": "block",
+      "name": "blockName",
+      "repeatById": "fieldsizeid",
+      "content": [
+        {
+          "size": 1,
+          "name": "field1_size1"
+        },
+        {
+          "size": 2,
+          "name": "field2_size2"
+        }
+      ]
+		}
+	]
+}

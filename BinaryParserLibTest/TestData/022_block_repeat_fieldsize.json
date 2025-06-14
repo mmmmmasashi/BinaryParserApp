@@ -1,0 +1,25 @@
+﻿{
+	"protocolName": "階層的なブロックの導入_ブロック数1",
+	"structure": [
+    {
+      "name": "sample",
+      "type": "uint8",
+      "id":  "fieldsizeid"
+    },
+		{
+      "type": "block",
+      "name": "blockName",
+      "repeatById": "fieldsizeid",
+      "content": [
+        {
+          "size": 1,
+          "name": "1field"
+        },
+        {
+          "size": 2,
+          "name": "2fields"
+        }
+      ]
+		}
+	]
+}
