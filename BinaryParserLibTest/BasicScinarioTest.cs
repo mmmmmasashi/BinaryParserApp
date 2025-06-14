@@ -102,7 +102,14 @@ public class BasicScinarioTest
         Assert.Equal("00", result.RootFields[0].HexStr);
 
         Assert.Equal("blockName", result.RootFields[1].Name);
-        Assert.Equal(2, result.RootFields[1].Children.Count);
+        var blockChildren = result.RootFields[1].Children;
 
+        {
+            Assert.Equal("1field", blockChildren[0].Name);
+            Assert.Equal("2fields", blockChildren[1].Name);
+
+            Assert.Equal("01", blockChildren[0].HexStr);
+            Assert.Equal("0102", blockChildren[1].HexStr);
+        }
     }
 }

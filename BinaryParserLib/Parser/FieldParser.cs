@@ -1,0 +1,84 @@
+﻿using BinaryParserLib.Parsed;
+using BinaryParserLib.Protocol;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BinaryParserLib.Parser;
+
+internal class FieldParser
+{
+    internal void ParseField(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent)
+    {
+        //ブロックの場合
+        if (setting.Type is string type && type == "block")
+        {
+            ParseBlockField(reader, setting, fieldListCurrent);
+        }
+        //固定サイズの場合
+        else if (setting.Repeat is int repeatFixedCount && repeatFixedCount > 0)
+        {
+            ParseFixedSizeRepeatFields(reader, setting, fieldListCurrent, repeatFixedCount);
+        }
+        //可変サイズの場合
+        else if (setting.RepeatById is string repeatById)
+        {
+            ParseVariableSizeRepeatFields(reader, setting, fieldListCurrent, repeatById);
+        }
+        else
+        {
+            ParseSingleField(reader, setting, fieldListCurrent);
+        }
+    }
+
+    private void ParseBlockField(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent)
+    {
+        var children = new List<Field>();
+
+        var content = setting.Content;
+        if (content == null) throw new InvalidDataException();//空のブロック？
+        foreach (var eachSetting in content)
+        {
+            ParseField(reader, eachSetting, children);
+        }
+
+        fieldListCurrent.Add(Field.CreateBlock(setting.Id, setting.Name, children));
+    }
+
+    private static void ParseSingleField(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent)
+    {
+        var byteSize = setting.ByteSize;
+        var fieldData = reader.ReadBytes(byteSize).ToArray();
+        fieldListCurrent.Add(new Field(setting.Id, setting.Name, fieldData));
+    }
+
+    private void ParseVariableSizeRepeatFields(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent, string repeatById)
+    {
+        var repeatField = fieldListCurrent.FirstOrDefault(f => f?.Id == repeatById);
+        if (repeatField == null)
+        {
+            throw new InvalidOperationException($"Repeat field '{repeatById}' not found in parsed fields.");
+        }
+
+        //符号なし16bitのバイト列を前提に解釈
+        int repeatCount = BitConverter.ToInt16(repeatField.Bytes);
+
+        var expandedSettingList = Enumerable.Range(1, repeatCount).Select(number => setting.RenameByRepeat(number)).ToList();
+        var ans = new List<Field>();
+        foreach (var eachSetting in expandedSettingList)
+        {
+            ParseField(reader, eachSetting, fieldListCurrent);
+        }
+    }
+
+    private void ParseFixedSizeRepeatFields(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent, int repeatFixedCount)
+    {
+        for (int i = 0; i < repeatFixedCount; i++)
+        {
+            var expandedSetting = setting.RenameByRepeat(i + 1);
+            ParseField(reader, expandedSetting, fieldListCurrent);
+        }
+    }
+}

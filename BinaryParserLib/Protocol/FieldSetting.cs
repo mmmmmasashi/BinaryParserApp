@@ -24,10 +24,13 @@ public class FieldSetting
     public int? Size { get; init; } = 1;
 
     [JsonPropertyName("repeat")]
-    public int? Repeat { get; init; } = null;
+    public int? Repeat { get; set; } = null;
 
     [JsonPropertyName("repeatById")]
-    public string? RepeatById { get; init; }
+    public string? RepeatById { get; set; }
+
+    [JsonPropertyName("content")]
+    public List<FieldSetting> Content { get; init; } = new List<FieldSetting>();
 
     public int ByteSize{
         get
@@ -39,13 +42,12 @@ public class FieldSetting
     }
 
 
-    public FieldSetting() { }
-
-
-    internal FieldSetting CopyUsingNumber(int number)
+    internal FieldSetting RenameByRepeat(int number)
     {
         var copy = (FieldSetting)this.MemberwiseClone();
         copy.Name = $"{this.Name}({number})";
+        copy.Repeat = null;
+        copy.RepeatById = null;
         return copy;
     }
 }

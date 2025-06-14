@@ -20,42 +20,10 @@ public class BinaryParser(ProtocolSetting setting)
 
         foreach (var eachRawSetting in _setting.Structure)
         {
-            List<FieldSetting> expandedSettings = ExpandRepeatById(eachRawSetting, fieldList);
-            foreach (var eachSetting in expandedSettings)
-            {
-                fieldList.Add(ParseField(reader, eachSetting));
-            }
+            new FieldParser().ParseField(reader, eachRawSetting, fieldList);
         }
 
         return new ParsedData(_setting.ProtocolName, fieldList.ToArray());
-    }
-
-    private Field ParseField(BinaryReader reader, FieldSetting setting)
-    {
-        var byteSize = setting.ByteSize;
-        var fieldData = reader.ReadBytes(byteSize).ToArray();
-        return new Field(setting.Id, setting.Name, fieldData);
-    }
-
-    private List<FieldSetting> ExpandRepeatById(FieldSetting eachRawSetting, List<Field> fieldList)
-    {
-        //可変サイズの場合
-        if (eachRawSetting.RepeatById is string repeatById)
-        {
-            var repeatField = fieldList.FirstOrDefault(f => f?.Id == repeatById);
-            if (repeatField == null)
-            {
-                throw new InvalidOperationException($"Repeat field '{repeatById}' not found in parsed fields.");
-            }
-
-            //符号なし16bitのバイト列を前提に解釈
-            int repeatCount =  BitConverter.ToInt16(repeatField.Bytes);
-
-            return Enumerable.Range(1, repeatCount).Select(number => eachRawSetting.CopyUsingNumber(number)).ToList();
-        }
-
-        //nullの場合
-        return new List<FieldSetting>() { eachRawSetting };
     }
 
 }
