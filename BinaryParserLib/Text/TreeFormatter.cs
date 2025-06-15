@@ -3,40 +3,69 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BinaryParserLib.Text;
 
-public static class TreeFormatter
+internal static class TreeFormatter
 {
-    public static List<string> ToIndentedLines<T>(T node, int depth = 0) where T : ITreeNode<T>
+    /// <summary>
+    /// ツリー構造のノードをインデント付きの文字列リストに変換します。
+    /// </summary>
+    internal static List<string> ToIndentedLines<T>(T node, int depth = 0) where T : ITreeNode<T>
     {
-        var namesAndValueList = new List<(List<string>, string)>();
-        var names = new List<string>();
-        ToNamesAndHexStr(node, namesAndValueList, names);
+        var tableData = ToTableData(node);
+        return tableData.Rows.Select(row => string.Join("\t", row)).ToList();
+    }
+
+    internal static TableData ToTableData<T>(T node) where T : ITreeNode<T>
+    {
+        List<(List<string>, string)> namesAndValueList = ToAlignedTableFormat(node);
 
         var maxNameDepth = namesAndValueList.Max(n => n.Item1.Count);
 
         //インデントを調整して、Valueの位置を揃える形でstring化する
 
-        return namesAndValueList.Select(pair =>
+        var tableRows = namesAndValueList.Select(pair =>
         {
-            var names = pair.Item1;
-            var value = pair.Item2;
+        var names = pair.Item1;
+        var value = pair.Item2;
 
-            //名前の深さに応じてインデントを調整
-            const char tab = '\t';
-            var indent = new string(tab, (maxNameDepth - names.Count));
-            var namePart = string.Join(tab, names);
-            return $"{namePart}{indent}{tab}{value}";
+            //名前の深さに応じて空要素を入れる
+            var countOfBlank = maxNameDepth - names.Count;
+            var blanks = Enumerable.Repeat(string.Empty, countOfBlank).ToList();
+            var ans = names.Concat(blanks).ToList();
+            ans.Add(value);
+            return ans;
         }).ToList();
+
+        return new TableData(node.Name, tableRows);
+    }
+
+    /// <summary>
+    /// ツリー構造のノードを、名称と値のペアのリストに変換します。
+    /// </summary>
+    private static List<(List<string>, string)> ToAlignedTableFormat<T>(T node) where T : ITreeNode<T>
+    {
+        var namesAndValueList = new List<(List<string>, string)>();
+        var names = new List<string>();
+        ToNamesAndHexStr(node, namesAndValueList, names, isTopNode:true);
+        return namesAndValueList;
     }
 
     /// <summary>
     /// ツリー構造のノードを再帰的に処理し、名称のリストと値をペアとするリストを作成します。
     /// </summary>
-    private static void ToNamesAndHexStr<T>(T node, List<(List<string>, string)> namesAndValueList, List<string> namesCurrent) where T : ITreeNode<T>
+    private static void ToNamesAndHexStr<T>(
+        T node,
+        List<(List<string>, string)> namesAndValueList,
+        List<string> namesCurrent,
+        bool isTopNode) where T : ITreeNode<T>
     {
-        namesCurrent.Add(node.Name);
+        if (!isTopNode)
+        {
+            namesCurrent.Add(node.Name);
+        }
 
         bool isLeaf = node.Children.Count == 0;
 
@@ -51,7 +80,7 @@ public static class TreeFormatter
             // 子ノードがある場合、再帰的に処理
             foreach (var child in node.Children)
             {
-                ToNamesAndHexStr(child, namesAndValueList, namesCurrent);
+                ToNamesAndHexStr(child, namesAndValueList, namesCurrent, false);
             }
         }
 

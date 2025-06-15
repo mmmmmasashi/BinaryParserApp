@@ -19,7 +19,7 @@ try
     ParsedData result = parser.ParseBinaryFile(binFile);
     Console.WriteLine($"Protocol Name: {result.ProtocolName ?? "-" }");
 
-    var lines = new ParsedDataToTsvFormatter().Format(result);
+    var lines = new ParsedDataConverter().FormatToTsv(result);
     foreach (var line in lines)
     {
         Console.WriteLine(line);
