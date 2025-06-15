@@ -1,0 +1,25 @@
+{
+  "protocolName": "マルチセンサープロトコル",
+  "structure": [
+    {
+      "id": "count",
+      "name": "センサー数",
+      "type": "uint8"
+    },
+    {
+      "type": "block",
+      "name": "センサーブロック",
+      "repeatById": "count",
+      "content": [
+        {
+          "name": "センサーID",
+          "type": "uint8"
+        },
+        {
+          "name": "値",
+          "type": "uint16"
+        }
+      ]
+    }
+  ]
+}

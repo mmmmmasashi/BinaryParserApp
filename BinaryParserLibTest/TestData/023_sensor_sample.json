@@ -1,0 +1,24 @@
+{
+  "protocolName": "センサーデータプロトコル",
+  "structure": [
+    {
+      "name": "デバイスID",
+      "type": "uint8"
+    },
+    {
+      "type": "block",
+      "name": "センサー1",
+      "content": [
+        {
+          "name": "温度",
+          "type": "uint16"
+        },
+        {
+          "name": "湿度",
+          "type": "uint8",
+          "repeat": 2
+        }
+      ]
+    }
+  ]
+}

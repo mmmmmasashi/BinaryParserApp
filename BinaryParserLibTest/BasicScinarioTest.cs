@@ -17,7 +17,7 @@ public class BasicScinarioTest
     }
 
     [Fact]
-    public void Šî–{“I‚ÈƒoƒCƒiƒŠ‰ğÍƒVƒiƒŠƒI1()
+    public void åŸºæœ¬çš„ãªãƒã‚¤ãƒŠãƒªå…¥åŠ›ã‚·ãƒŠãƒªã‚ª1()
     {
         var result = ParseBySettingAndBin("001_minset.json", "001_min.bin");
         Assert.Equal("Protocol X", result.ProtocolName);
@@ -29,7 +29,7 @@ public class BasicScinarioTest
     }
 
     [Fact]
-    public void Šî–{“I‚ÈƒoƒCƒiƒŠ‰ğÍƒVƒiƒŠƒI2()
+    public void åŸºæœ¬çš„ãªãƒã‚¤ãƒŠãƒªå…¥åŠ›ã‚·ãƒŠãƒªã‚ª2()
     {
         var result = ParseBySettingAndBin("002_minset.json", "002_min.bin");
 
@@ -42,10 +42,10 @@ public class BasicScinarioTest
     }
 
     [Fact]
-    public void •¡”ƒtƒB[ƒ‹ƒh‚ ‚éê‡‚à“Ç‚ß‚é‚±‚Æ()
+    public void è¤‡æ•°ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãŒã‚ã‚‹å ´åˆãŒèª­ã‚ã‚‹äº‹()
     {
         var result = ParseBySettingAndBin("003_multi_fields.json", "003_multi_fields.bin");
-        Assert.Equal("•¡”ƒtƒB[ƒ‹ƒhƒvƒƒgƒRƒ‹", result.ProtocolName);
+        Assert.Equal("è¤‡æ•°ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãƒ—ãƒ­ãƒˆã‚³ãƒ«", result.ProtocolName);
         Assert.Equal(2, result.RootFields.Count);
 
         var field1 = result.RootFields[0];
@@ -58,19 +58,19 @@ public class BasicScinarioTest
     }
 
     [Fact]
-    public void repeat‹@”\‚Å“¯‚¶ƒuƒƒbƒN‚ğŒÅ’è”ŒJ‚è•Ô‚·‚±‚Æ()
+    public void repeatæ©Ÿèƒ½ã§åŒã˜ãƒ–ãƒ­ãƒƒã‚¯ã‚’å›ºå®šæ•°ç¹°ã‚Šè¿”ã›ã‚‹ã“ã¨()
     {
         var result = ParseBySettingAndBin("010_repeat.json", "010_repeat.bin");
         Assert.Equal(2 + 3, result.RootFields.Count);
 
-        //"1field", ƒTƒCƒY1‚ª2‰ñŒJ‚è•Ô‚³‚ê‚é
+        //"1field", ã‚µã‚¤ã‚º1ã‚’2å›ç¹°ã‚Šè¿”ã™
         Assert.Equal("01", result.RootFields[0].HexStr);
         Assert.Equal("1field(1)", result.RootFields[0].Name);
 
         Assert.Equal("02", result.RootFields[1].HexStr);
         Assert.Equal("1field(2)", result.RootFields[1].Name);
 
-        //"2fields", ƒTƒCƒY2‚ª3‰ñŒJ‚è•Ô‚³‚ê‚é
+        //"2fields", ã‚µã‚¤ã‚º2ã‚’3å›ç¹°ã‚Šè¿”ã™
         Assert.Equal("0304", result.RootFields[2].HexStr);
         Assert.Equal("2fields(1)", result.RootFields[2].Name);
 
@@ -82,18 +82,17 @@ public class BasicScinarioTest
     }
 
     [Fact]
-    public void •ÊƒtƒB[ƒ‹ƒh‚Åw’è‚µ‚½”’l‚ğ‚à‚Æ‚ÉƒuƒƒbƒN”‚ğŒJ‚è•Ô‚·()
+    public void åˆ¥ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã§æŒ‡å®šã—ãŸå€¤ã ã‘ãƒ–ãƒ­ãƒƒã‚¯ã‚’ç¹°ã‚Šè¿”ã™()
     {
         var result = ParseBySettingAndBin("011_repeat_by_field.json", "011_repeat_by_field.bin");
         Assert.Equal(1 + 3, result.RootFields.Count);
 
         Assert.Equal("block-num", result.RootFields[0].Name);
         Assert.Equal("0300", result.RootFields[0].HexStr);
-
     }
 
     [Fact]
-    public void Block‚Ì“±“ü_ƒuƒƒbƒN”1()
+    public void Blockã®å°å…¥_ãƒ–ãƒ­ãƒƒã‚¯æ•°1()
     {
         var result = ParseBySettingAndBin("020_block.json", "020_block.bin");
         Assert.Equal(2, result.RootFields.Count);
@@ -114,7 +113,7 @@ public class BasicScinarioTest
     }
 
     [Fact]
-    public void Block‚ÌŒÅ’è”ŒJ‚è•Ô‚µ_ƒuƒƒbƒN”3()
+    public void Blockã®å›ºå®šæ•°ç¹°ã‚Šè¿”ã—_ãƒ–ãƒ­ãƒƒã‚¯æ•°3()
     {
         var result = ParseBySettingAndBin("021_block_repeat.json", "021_block_repeat.bin");
         Assert.Equal(1 + 3, result.RootFields.Count);
@@ -140,7 +139,7 @@ public class BasicScinarioTest
     }
 
     [Fact]
-    public void Block‚ÌƒtƒB[ƒ‹ƒh‚É‰‚¶‚½”ŒJ‚è•Ô‚µ_ƒuƒƒbƒN”2()
+    public void Blockã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã«ä¾å­˜ã—ãŸç¹°ã‚Šè¿”ã—_ãƒ–ãƒ­ãƒƒã‚¯æ•°2()
     {
         var result = ParseBySettingAndBin("022_block_repeat_fieldsize.json", "022_block_repeat_fieldsize.bin");
         Assert.Equal(1 + 2, result.RootFields.Count);
@@ -162,5 +161,60 @@ public class BasicScinarioTest
                 Assert.Equal("0102", blockChildren[1].HexStr);
             }
         }
+    }
+
+    [Fact]
+    public void åŸºæœ¬ã‚»ãƒ³ã‚µãƒ¼ãƒ‡ãƒ¼ã‚¿ã®ãƒ‘ãƒ¼ã‚¹()
+    {
+        var result = ParseBySettingAndBin("023_sensor_sample.json", "023_sensor_sample.bin");
+        Assert.Equal("ã‚»ãƒ³ã‚µãƒ¼ãƒ‡ãƒ¼ã‚¿ãƒ—ãƒ­ãƒˆã‚³ãƒ«", result.ProtocolName);
+        Assert.Equal(2, result.RootFields.Count);
+
+        // ãƒ‡ãƒã‚¤ã‚¹IDã®ç¢ºèª
+        Assert.Equal("ãƒ‡ãƒã‚¤ã‚¹ID", result.RootFields[0].Name);
+        Assert.Equal("01", result.RootFields[0].HexStr);
+
+        // ã‚»ãƒ³ã‚µãƒ¼1ãƒ–ãƒ­ãƒƒã‚¯ã®ç¢ºèª
+        var sensorBlock = result.RootFields[1];
+        Assert.Equal("ã‚»ãƒ³ã‚µãƒ¼1", sensorBlock.Name);
+        Assert.Equal(3, sensorBlock.Children.Count);
+
+        // æ¸©åº¦ã®ç¢ºèª
+        Assert.Equal("æ¸©åº¦", sensorBlock.Children[0].Name);
+        Assert.Equal("1234", sensorBlock.Children[0].HexStr);
+
+        // æ¹¿åº¦ã®ç¹°ã‚Šè¿”ã—ã®ç¢ºèª
+        Assert.Equal("æ¹¿åº¦(1)", sensorBlock.Children[1].Name);
+        Assert.Equal("50", sensorBlock.Children[1].HexStr);
+
+        Assert.Equal("æ¹¿åº¦(2)", sensorBlock.Children[2].Name);
+        Assert.Equal("60", sensorBlock.Children[2].HexStr);
+    }
+
+    [Fact]
+    public void ãƒãƒ«ãƒã‚»ãƒ³ã‚µãƒ¼ãƒ‡ãƒ¼ã‚¿ã®ãƒ‘ãƒ¼ã‚¹()
+    {
+        var result = ParseBySettingAndBin("024_multi_sensor_sample.json", "024_multi_sensor_sample.bin");
+        Assert.Equal("ãƒãƒ«ãƒã‚»ãƒ³ã‚µãƒ¼ãƒ—ãƒ­ãƒˆã‚³ãƒ«", result.ProtocolName);
+
+        // ã‚»ãƒ³ã‚µãƒ¼æ•°ã®ç¢ºèª
+        Assert.Equal("ã‚»ãƒ³ã‚µãƒ¼æ•°", result.RootFields[0].Name);
+        Assert.Equal("02", result.RootFields[0].HexStr);
+
+        // ã‚»ãƒ³ã‚µãƒ¼ãƒ–ãƒ­ãƒƒã‚¯1ã®ç¢ºèª
+        var block1 = result.RootFields[1];
+        Assert.Equal("ã‚»ãƒ³ã‚µãƒ¼ãƒ–ãƒ­ãƒƒã‚¯(1)", block1.Name);
+        Assert.Equal("ã‚»ãƒ³ã‚µãƒ¼ID", block1.Children[0].Name);
+        Assert.Equal("01", block1.Children[0].HexStr);
+        Assert.Equal("å€¤", block1.Children[1].Name);
+        Assert.Equal("1234", block1.Children[1].HexStr);
+
+        // ã‚»ãƒ³ã‚µãƒ¼ãƒ–ãƒ­ãƒƒã‚¯2ã®ç¢ºèª
+        var block2 = result.RootFields[2];
+        Assert.Equal("ã‚»ãƒ³ã‚µãƒ¼ãƒ–ãƒ­ãƒƒã‚¯(2)", block2.Name);
+        Assert.Equal("ã‚»ãƒ³ã‚µãƒ¼ID", block2.Children[0].Name);
+        Assert.Equal("02", block2.Children[0].HexStr);
+        Assert.Equal("å€¤", block2.Children[1].Name);
+        Assert.Equal("5678", block2.Children[1].HexStr);
     }
 }
