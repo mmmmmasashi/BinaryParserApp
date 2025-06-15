@@ -18,7 +18,7 @@ public class Field : ITreeNode<Field>
 
     public string ToLine()
     {
-        //Name, HexStrをつなげて出力。ない場合は"--"に置き換える
+        //Name, HexStrをつなげて出力
         string namePart = string.IsNullOrEmpty(Name) ? "--" : Name;
         string hexPart = string.IsNullOrEmpty(HexStr) ? "--" : HexStr;
         return $"{namePart} : {hexPart}";

@@ -1,15 +1,16 @@
 using BinaryParserLib.Parsed;
 using BinaryParserLib.Parser;
 using BinaryParserLib.Protocol;
+using BinaryParserLib.Text;
 using System;
 using System.Text.Json;
 using Xunit;
 
 namespace BinaryParserLibTest;
 
-public class BasicScinarioTest
+public class BasicScenarioTest
 {
-    private static ParsedData ParseBySettingAndBin(string settingFile, string binFile)
+    internal static ParsedData ParseBySettingAndBin(string settingFile, string binFile)
     {
         ProtocolSetting setting = ProtocolSetting.FromJsonFile(Constants.GetPathOf(settingFile));
         BinaryParser parser = new BinaryParser(setting);

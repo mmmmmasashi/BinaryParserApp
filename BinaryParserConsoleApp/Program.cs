@@ -19,8 +19,7 @@ try
     ParsedData result = parser.ParseBinaryFile(binFile);
     Console.WriteLine($"Protocol Name: {result.ProtocolName ?? "-" }");
 
-    var root = new Field("-", "root", null, result.RootFields.ToList());
-    var lines = TreeFormatter.ToIndentedLines<Field>(root);
+    var lines = new ParsedDataToTsvFormatter().Format(result);
     foreach (var line in lines)
     {
         Console.WriteLine(line);
