@@ -24,6 +24,8 @@ try
     {
         Console.WriteLine(line);
     }
+
+    Console.ReadLine();
 }
 catch (Exception ex)
 {
