@@ -13,4 +13,6 @@ public  interface ITreeNode<T> : ILine {
 public interface ILine
 {
     public string ToLine();
+    public string Name { get; }
+    public string HexStr { get; }
 }

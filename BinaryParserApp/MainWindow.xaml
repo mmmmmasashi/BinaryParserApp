@@ -1,12 +1,34 @@
 ﻿<Window x:Class="BinaryParserApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BinaryParserApp"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="バイナリパーサー" Height="400" Width="500">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
+        <!-- JSON設定ファイルパス -->
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,10">設定ファイル(JSON)</TextBlock>
+        <TextBox Grid.Row="0" Grid.Column="1" Name="JsonPathTextBox" Margin="0,0,0,10" Text="{Binding JsonFilePath.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <!-- BINファイルパス -->
+        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,10">バイナリファイル(BIN)</TextBlock>
+        <TextBox Grid.Row="1" Grid.Column="1" Name="BinPathTextBox" Margin="0,0,0,10" Text="{Binding BinFilePath.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <!-- 変換ボタン -->
+        <Button Grid.Row="2" Grid.Column="1" Command="{Binding ConvertCommand}"
+                Name="ConvertButton" Content="変換" Width="100" HorizontalAlignment="Left"/>
+        
+        <!-- 結果表示 -->
+        <TextBox Grid.Row="3" Grid.ColumnSpan="2" Name="ResultTextBox" Margin="0,10,0,0"
+                 Text="{Binding ConvertedText.Value, Mode=OneWay}" VerticalScrollBarVisibility="Auto"
+                 AcceptsReturn="True" IsReadOnly="True" TextWrapping="Wrap"/>
     </Grid>
 </Window>
