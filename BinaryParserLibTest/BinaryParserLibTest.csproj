@@ -79,6 +79,12 @@
     <None Update="TestData\023_sensor_sample.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\025_block_in_block.bin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\025_block_in_block.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\024_multi_sensor_sample.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

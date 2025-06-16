@@ -66,7 +66,7 @@ internal class FieldParser
             var children = new List<Field>();
             foreach (var eachSetting in content)
             {
-                ParseNonBlockField(reader, eachSetting, children);
+                ParseField(reader, eachSetting, children);
             }
 
             //それを子にもつブロックフィールドを一つ作り、渡されたリストに並列に追加する
