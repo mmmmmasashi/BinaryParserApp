@@ -1,0 +1,25 @@
+{
+  "protocolName": "name_of_protocol",
+  "structure": [
+    {
+      "type": "block",
+      "name": "block_parent",
+      "content": [
+        {
+          "name": "block_child",
+          "type": "block",
+          "content": [
+            {
+              "name": "field1",
+              "type": "uint8"
+            },
+            {
+              "name": "field2",
+              "type": "uint16"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

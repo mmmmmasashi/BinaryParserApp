@@ -218,4 +218,29 @@ public class BasicScenarioTest
         Assert.Equal("値", block2.Children[1].Name);
         Assert.Equal("5678", block2.Children[1].HexStr);
     }
+
+    [Fact]
+    public void ブロックの入れ子構造も読める()
+    {
+        var result = ParseBySettingAndBin("025_block_in_block.json", "025_block_in_block.bin");
+        Assert.Equal("name_of_protocol", result.ProtocolName);
+        Assert.Single(result.RootFields);
+
+        // 親ブロックの確認
+        var parentBlock = result.RootFields[0];
+        Assert.Equal("block_parent", parentBlock.Name);
+        Assert.Single(parentBlock.Children);
+
+        // 子ブロックの確認
+        var childBlock = parentBlock.Children[0];
+        Assert.Equal("block_child", childBlock.Name);
+        Assert.Equal(2, childBlock.Children.Count);
+
+        // 子ブロック内のフィールドを確認
+        Assert.Equal("field1", childBlock.Children[0].Name);
+        Assert.Equal("01", childBlock.Children[0].HexStr);
+
+        Assert.Equal("field2", childBlock.Children[1].Name);
+        Assert.Equal("0203", childBlock.Children[1].HexStr);
+    }
 }
