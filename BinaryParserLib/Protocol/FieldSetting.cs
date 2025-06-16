@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BinaryParserLib.Protocol;
 
@@ -32,7 +33,7 @@ public class FieldSetting
     [JsonPropertyName("content")]
     public List<FieldSetting> Content { get; init; } = new List<FieldSetting>();
 
-    public int ByteSize{
+    public int ByteSize {
         get
         {
             if (Type == "uint16") return 2;
@@ -42,6 +43,7 @@ public class FieldSetting
         }
     }
 
+    public bool IsBlock { get => (this.Type is string type && type == "block") || (this.Content?.Count > 0 ); }
 
     internal FieldSetting RenameByRepeat(int number)
     {

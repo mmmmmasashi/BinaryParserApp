@@ -13,7 +13,7 @@ internal class FieldParser
     internal void ParseField(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent)
     {
         //ブロックの場合
-        if (setting.Type is string type && type == "block")
+        if (setting.IsBlock)
         {
             ParseBlockField(reader, setting, fieldListCurrent);
         }

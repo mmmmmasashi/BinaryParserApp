@@ -92,10 +92,12 @@ public class BasicScenarioTest
         Assert.Equal("0300", result.RootFields[0].HexStr);
     }
 
-    [Fact]
-    public void Blockの導入_ブロック数1()
+    [Theory]
+    [InlineData("020_block")]
+    [InlineData("026_block_with_no_type")]
+    public void Blockの導入_ブロック数1(string fileName)
     {
-        var result = ParseBySettingAndBin("020_block.json", "020_block.bin");
+        var result = ParseBySettingAndBin($"{fileName}.json", $"{fileName}.bin");
         Assert.Equal(2, result.RootFields.Count);
         
         Assert.Equal("sample", result.RootFields[0].Name);

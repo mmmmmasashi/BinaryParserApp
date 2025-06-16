@@ -1,0 +1,22 @@
+﻿{
+	"protocolName": "階層的なブロックの導入_ブロック数1",
+	"structure": [
+    {
+      "name":  "sample",
+      "size": 1
+    },
+		{
+      "name":  "blockName",
+      "content": [
+        {
+          "size": 1,
+          "name": "1field"
+        },
+        {
+          "size": 2,
+          "name": "2fields"
+        }
+      ]
+		}
+	]
+}
