@@ -1,4 +1,5 @@
-﻿using BinaryParserLib.Parsed;
+﻿using BinaryParserLib.Common;
+using BinaryParserLib.Parsed;
 using BinaryParserLib.Protocol;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ public class BinaryParser(ProtocolSetting setting)
 
     public ParsedData ParseBinaryFile(string filePath)
     {
+        filePath = PathUtil.RemoveDoubleQuatation(filePath);
         var reader = new BinaryReader(new MemoryStream(File.ReadAllBytes(filePath)));
         var fieldList = new List<Field>();
 

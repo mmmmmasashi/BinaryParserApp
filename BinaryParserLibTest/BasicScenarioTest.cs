@@ -3,6 +3,7 @@ using BinaryParserLib.Parser;
 using BinaryParserLib.Protocol;
 using BinaryParserLib.Text;
 using System;
+using System.IO.Compression;
 using System.Text.Json;
 using Xunit;
 
@@ -15,6 +16,17 @@ public class BasicScenarioTest
         ProtocolSetting setting = ProtocolSetting.FromJsonFile(Constants.GetPathOf(settingFile));
         BinaryParser parser = new BinaryParser(setting);
         return parser.ParseBinaryFile(Constants.GetPathOf(binFile));
+    }
+
+    [Fact]
+    public void ダブルクォーテーションでファイルパスをくくっていても解釈できることをシナリオ1で実施()
+    {
+        string jsonPath = "\"" + Constants.GetPathOf("001_minset.json") + "\"";
+        ProtocolSetting setting = ProtocolSetting.FromJsonFile(jsonPath);
+        BinaryParser parser = new BinaryParser(setting);
+
+        string binPath = "\"" + Constants.GetPathOf("001_min.bin") + "\"";
+        var result = parser.ParseBinaryFile(binPath);
     }
 
     [Fact]
