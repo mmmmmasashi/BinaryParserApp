@@ -1,4 +1,7 @@
-﻿using System.Configuration;
+﻿using BinaryParserApp.View.Service;
+using BinaryParserApp.ViewModel;
+using Microsoft.Extensions.DependencyInjection;
+using System.Configuration;
 using System.Data;
 using System.Windows;
 
@@ -9,6 +12,8 @@ namespace BinaryParserApp;
 /// </summary>
 public partial class App : Application
 {
+    public static IServiceProvider Services { get; private set; }
+
     public App()
     {
         // 未処理例外の処理
@@ -19,6 +24,24 @@ public partial class App : Application
         // 例外が処理されなかったら発生する（.NET 1.0 より）
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
     }
+
+
+    protected override void OnStartup(StartupEventArgs e)
+    {
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.AddSingleton<IWindowService, WindowService>();
+        serviceCollection.AddTransient<MainWindowViewModel>();
+        // 他のViewModelも必要に応じて登録
+
+        Services = serviceCollection.BuildServiceProvider();
+
+        var mainWindow = new MainWindow
+        {
+            DataContext = Services.GetRequiredService<MainWindowViewModel>()
+        };
+        mainWindow.Show();
+    }
+
     /// <summary>
     /// UI スレッドで発生した未処理例外を処理します。
     /// </summary>

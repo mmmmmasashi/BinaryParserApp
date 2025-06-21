@@ -1,4 +1,5 @@
-﻿using BinaryParserLib.Parsed;
+﻿using BinaryParserApp.View.Service;
+using BinaryParserLib.Parsed;
 using BinaryParserLib.Parser;
 using BinaryParserLib.Protocol;
 using BinaryParserLib.Text;
@@ -14,20 +15,21 @@ namespace BinaryParserApp.ViewModel
 {
     public class MainWindowViewModel
     {
+        private readonly IWindowService _windowService;
+
         // JSON設定ファイルパス
         public ReactiveProperty<string> JsonFilePath { get; set; }
 
         // BINファイルパス
         public ReactiveProperty<string> BinFilePath { get; set; }
 
-        // 変換結果のテキスト
-        public ReactiveProperty<string> ConvertedText { get; set; } = new ReactiveProperty<string>();
-
         // 変換コマンド
         public ReactiveCommand ConvertCommand { get; }
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(IWindowService windowService)
         {
+            _windowService = windowService;
+
             // 設定から前回値を復元
             JsonFilePath = new ReactiveProperty<string>(Properties.Settings.Default.JsonFilePath);
             BinFilePath = new ReactiveProperty<string>(Properties.Settings.Default.BinFilePath);
@@ -63,13 +65,14 @@ namespace BinaryParserApp.ViewModel
             ProtocolSetting setting = ProtocolSetting.FromJsonFile(JsonFilePath.Value);
             BinaryParser parser = new BinaryParser(setting);
             ParsedData result = parser.ParseBinaryFile(BinFilePath.Value);
-            Console.WriteLine($"Protocol Name: {result.ProtocolName ?? "-"}");
 
             var tsv = new ParsedDataConverter().FormatToTsv(result);
-
             var lines = new List<string>() { $"Protocol Name: {result.ProtocolName ?? "-"}" };
             lines.AddRange(tsv);
-            ConvertedText.Value = string.Join(Environment.NewLine, lines);
+            string tsvText = string.Join(Environment.NewLine, lines);
+
+            //TextWindowを表示する
+            _windowService.ShowTextWindow(tsvText);
 
         }
     }
