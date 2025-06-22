@@ -9,6 +9,8 @@ namespace BinaryParserApp.View
         public TableWindow(TableWindowViewModel viewModel)
         {
             InitializeComponent();
+            viewModel.RequestClose += () => Close();
+            viewModel.RequestCopyToTsv += CopyAsTsv;
             DataContext = viewModel;
 
             // カラムをColumnsの順に動的生成
@@ -20,6 +22,21 @@ namespace BinaryParserApp.View
                     Header = viewModel.Columns[i],
                     Binding = new System.Windows.Data.Binding($"[{colIndex}]")
                 });
+            }
+        }
+
+
+        private void CopyAsTsv(string tsvContent)
+        {
+            // クリップボードにTSV形式でコピー
+            try
+            {
+                Clipboard.SetText(tsvContent);
+                MessageBox.Show("TSV形式でクリップボードにコピーしました。", "コピー成功", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"TSV形式のコピーに失敗しました。\n{ex.Message}", "コピー失敗", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
