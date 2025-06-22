@@ -66,7 +66,13 @@ namespace BinaryParserApp.ViewModel
             BinaryParser parser = new BinaryParser(setting);
             ParsedData result = parser.ParseBinaryFile(BinFilePath.Value);
 
-            var tableData = new ParsedDataConverter().ConvertToTableData(result);
+            var formatOption = new TableFormatOption
+            {
+                UseNumberOption = true,
+                UseIndex = true,
+                UseByteSize = true
+            };
+            var tableData = new ParsedDataConverter(formatOption).ConvertToTableData(result);
             //TableWindowを表示する
             _windowService.ShowTableWindow(tableData.GetHeaderNames(), tableData.Rows);
 

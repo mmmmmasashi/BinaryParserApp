@@ -1,62 +1,115 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace BinaryParserLib.Text;
 
-internal static class TreeFormatter
+internal class TreeFormatter
 {
+    private readonly TableFormatOption _option;
+
+    internal TreeFormatter(TableFormatOption? option = null)
+    {
+        _option = option ?? new TableFormatOption();
+    }
+
     /// <summary>
     /// ツリー構造のノードをインデント付きの文字列リストに変換します。
     /// </summary>
-    internal static List<string> ToIndentedLines<T>(T node, int depth = 0) where T : ITreeNode<T>
+    internal List<string> ToIndentedLines<T>(T node, int depth = 0) where T : ITreeNode<T>
     {
         var tableData = ToTableData(node);
         return tableData.Rows.Select(row => string.Join("\t", row)).ToList();
     }
 
-    internal static TableData ToTableData<T>(T node) where T : ITreeNode<T>
+    class NamesAndValue
     {
-        List<(List<string>, string)> namesAndValueList = ToAlignedTableFormat(node);
+        public List<string> Names { get; set; }
+        public string Value { get; set; }
+        public NamesAndValue(List<string> names, string value)
+        {
+            Names = names;
+            Value = value;
+        }
 
-        var maxNameDepth = namesAndValueList.Max(n => n.Item1.Count);
+        internal NamesAndValue AlignHierarchy(int maxDepth)
+        {
+            // 名前の深さに応じて空要素を追加
+            var countOfBlank = maxDepth - Names.Count;
+            var blanks = Enumerable.Repeat(string.Empty, countOfBlank).ToList();
+            return new NamesAndValue(Names.Concat(blanks).ToList(), Value);
+        }
+    }
+
+    internal TableData ToTableData<T>(T node) where T : ITreeNode<T>
+    {
+        List<NamesAndValue> namesAndValueList = ToHierarchicalNamesAndValueList(node);
+
+        var maxNameDepth = namesAndValueList.Max(n => n.Names.Count);
 
         //インデントを調整して、Valueの位置を揃える形でstring化する
+        var alignedNamesAndValueList = namesAndValueList
+            .Select(nv => nv.AlignHierarchy(maxNameDepth))
+            .ToList();
 
-        var tableRows = namesAndValueList.Select(pair =>
+
+        List<string> headers = CreateHeaders(alignedNamesAndValueList.First());
+        List<List<string>> tableRows = CreateRows(alignedNamesAndValueList);
+
+        return new TableData(node.Name, tableRows, headers);
+    }
+
+    private List<List<string>> CreateRows(List<NamesAndValue> alignedNamesAndValueList)
+    {
+        int number = 1;
+        int currentByteIdx = 0;
+        return alignedNamesAndValueList.Select(item =>
         {
-        var names = pair.Item1;
-        var value = pair.Item2;
-
-            //名前の深さに応じて空要素を入れる
-            var countOfBlank = maxNameDepth - names.Count;
-            var blanks = Enumerable.Repeat(string.Empty, countOfBlank).ToList();
-            var ans = names.Concat(blanks).ToList();
-            ans.Add(value);
-            return ans;
+            var row = new List<string>();
+            if (_option.UseNumberOption) row.Add($"{number++}");
+            row.AddRange(item.Names);
+            int byteSize = item.Value.Length / 2; // HEX表現なので、2文字で1バイト
+            if (_option.UseIndex)
+            {
+                row.Add($"{currentByteIdx}");
+                currentByteIdx += byteSize;
+            }
+            if (_option.UseByteSize) row.Add(byteSize.ToString());
+            row.Add(item.Value);
+            return row;
         }).ToList();
+    }
 
-        return new TableData(node.Name, tableRows);
+    private List<string> CreateHeaders(NamesAndValue firstNamesAndValue)
+    {
+        var headers = new List<string>();
+        if (_option.UseNumberOption) headers.Add("No.");
+        headers.AddRange(Enumerable.Range(1, firstNamesAndValue.Names.Count).Select(number => $"h{number}"));
+        if (_option.UseIndex) headers.Add("index");
+        if (_option.UseByteSize) headers.Add("size");
+        headers.Add("data(HEX)");
+        return headers;
     }
 
     /// <summary>
     /// ツリー構造のノードを、名称と値のペアのリストに変換します。
     /// </summary>
-    private static List<(List<string>, string)> ToAlignedTableFormat<T>(T node) where T : ITreeNode<T>
+    private List<NamesAndValue> ToHierarchicalNamesAndValueList<T>(T node) where T : ITreeNode<T>
     {
         var namesAndValueList = new List<(List<string>, string)>();
         var names = new List<string>();
         ToNamesAndHexStr(node, namesAndValueList, names, isTopNode:true);
-        return namesAndValueList;
+        return namesAndValueList.Select(item => new NamesAndValue(item.Item1, item.Item2)).ToList();
     }
 
     /// <summary>
     /// ツリー構造のノードを再帰的に処理し、名称のリストと値をペアとするリストを作成します。
     /// </summary>
-    private static void ToNamesAndHexStr<T>(
+    private void ToNamesAndHexStr<T>(
         T node,
         List<(List<string>, string)> namesAndValueList,
         List<string> namesCurrent,

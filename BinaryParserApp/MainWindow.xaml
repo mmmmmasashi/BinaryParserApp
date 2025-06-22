@@ -1,7 +1,7 @@
 ﻿<Window x:Class="BinaryParserApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="バイナリパーサー" Height="160" Width="500">
+        Title="バイナリ解析" Height="160" Width="500">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
