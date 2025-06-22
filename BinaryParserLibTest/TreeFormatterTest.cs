@@ -14,9 +14,12 @@ public class TreeFormatterTest
 {
     private readonly ITestOutputHelper _output;
 
+    private ParsedData result;
+
     public TreeFormatterTest(ITestOutputHelper output)
     {
         _output = output;
+        result = BasicScenarioTest.ParseBySettingAndBin("024_multi_sensor_sample.json", "024_multi_sensor_sample.bin");
     }
 
     [Fact]
@@ -27,7 +30,6 @@ public class TreeFormatterTest
             UseNumberOption = true
         };
 
-        var result = BasicScenarioTest.ParseBySettingAndBin("024_multi_sensor_sample.json", "024_multi_sensor_sample.bin");
 
         var lines = new ParsedDataConverter(opt).FormatToTsv(result);
 
@@ -49,8 +51,6 @@ public class TreeFormatterTest
     [Fact]
     public void サンプル1()
     {
-        var result = BasicScenarioTest.ParseBySettingAndBin("024_multi_sensor_sample.json", "024_multi_sensor_sample.bin");
-
         var lines = new ParsedDataConverter().FormatToTsv(result);
         
         //foreach (var line in lines)
@@ -69,8 +69,6 @@ public class TreeFormatterTest
     [Fact]
     public void タブ区切りまではせずに_整形しやすいデータ構造に変換するところまで変換する()
     {
-        var result = BasicScenarioTest.ParseBySettingAndBin("024_multi_sensor_sample.json", "024_multi_sensor_sample.bin");
-
         var data = new ParsedDataConverter().ConvertToTableData(result);
         
         //タイトル
@@ -88,7 +86,6 @@ public class TreeFormatterTest
     [Fact]
     public void Numberつきの場合()
     {
-        var result = BasicScenarioTest.ParseBySettingAndBin("024_multi_sensor_sample.json", "024_multi_sensor_sample.bin");
         var option = new TableFormatOption
         {
             UseNumberOption = true
@@ -108,6 +105,32 @@ public class TreeFormatterTest
         Assert.Equal(new List<string> { "3", "センサーブロック(1)", "値", "1234" }, data.Rows[i++]);
         Assert.Equal(new List<string> { "4", "センサーブロック(2)", "センサーID", "02" }, data.Rows[i++]);
         Assert.Equal(new List<string> { "5", "センサーブロック(2)", "値", "5678" }, data.Rows[i++]);
+    }
+
+
+    [Fact]
+    public void Number_Index表示つきの場合()
+    {
+        var option = new TableFormatOption
+        {
+            UseNumberOption = true,
+            ShowIndex = true
+        };
+        var data = new ParsedDataConverter(option).ConvertToTableData(result);
+
+        //タイトル
+        Assert.Equal("マルチセンサープロトコル", data.ProtocolName);
+
+        //ヘッダー
+        Assert.Equal(new List<string> { "No.", "h1", "h2", "index", "data(HEX)" }, data.GetHeaderNames());
+
+        //テーブルの中身
+        int i = 0;
+        Assert.Equal(new List<string> { "1", "センサー数", "", "0", "02" }, data.Rows[i++]);
+        Assert.Equal(new List<string> { "2", "センサーブロック(1)", "センサーID", "1", "01" }, data.Rows[i++]);
+        Assert.Equal(new List<string> { "3", "センサーブロック(1)", "値", "2", "1234" }, data.Rows[i++]);
+        Assert.Equal(new List<string> { "4", "センサーブロック(2)", "センサーID", "4", "02" }, data.Rows[i++]);
+        Assert.Equal(new List<string> { "5", "センサーブロック(2)", "値", "5", "5678" }, data.Rows[i++]);
     }
 
 }

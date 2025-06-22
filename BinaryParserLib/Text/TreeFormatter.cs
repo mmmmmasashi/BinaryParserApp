@@ -56,9 +56,8 @@ internal class TreeFormatter
             .ToList();
 
 
-        List<List<string>> tableRows = CreateRows(alignedNamesAndValueList);
-
         List<string> headers = CreateHeaders(alignedNamesAndValueList.First());
+        List<List<string>> tableRows = CreateRows(alignedNamesAndValueList);
 
         return new TableData(node.Name, tableRows, headers);
     }
@@ -66,11 +65,17 @@ internal class TreeFormatter
     private List<List<string>> CreateRows(List<NamesAndValue> alignedNamesAndValueList)
     {
         int number = 1;
+        int currentByteIdx = 0;
         return alignedNamesAndValueList.Select(item =>
         {
             var row = new List<string>();
             if (_option.UseNumberOption) row.Add($"{number++}");
             row.AddRange(item.Names);
+            if (_option.ShowIndex)
+            {
+                row.Add($"{currentByteIdx}");
+                currentByteIdx += item.Value.Length / 2; // 1文字あたり2桁のHEX表現を想定
+            }
             row.Add(item.Value);
             return row;
         }).ToList();
@@ -79,11 +84,9 @@ internal class TreeFormatter
     private List<string> CreateHeaders(NamesAndValue firstNamesAndValue)
     {
         var headers = new List<string>();
-        if (_option.UseNumberOption)
-        {
-            headers.Add("No.");
-        }
+        if (_option.UseNumberOption) headers.Add("No.");
         headers.AddRange(Enumerable.Range(1, firstNamesAndValue.Names.Count).Select(number => $"h{number}"));
+        if (_option.ShowIndex) headers.Add("index");
         headers.Add("data(HEX)");
         return headers;
     }

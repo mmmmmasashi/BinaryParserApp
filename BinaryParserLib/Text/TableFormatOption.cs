@@ -9,5 +9,6 @@ namespace BinaryParserLib.Text
     public class TableFormatOption
     {
         public bool UseNumberOption { get; set; } = false;
+        public bool ShowIndex { get; set; } = false;
     }
 }
