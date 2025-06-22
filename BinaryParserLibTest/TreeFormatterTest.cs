@@ -114,7 +114,7 @@ public class TreeFormatterTest
         var option = new TableFormatOption
         {
             UseNumberOption = true,
-            ShowIndex = true
+            UseIndex = true
         };
         var data = new ParsedDataConverter(option).ConvertToTableData(result);
 
@@ -131,6 +131,32 @@ public class TreeFormatterTest
         Assert.Equal(new List<string> { "3", "センサーブロック(1)", "値", "2", "1234" }, data.Rows[i++]);
         Assert.Equal(new List<string> { "4", "センサーブロック(2)", "センサーID", "4", "02" }, data.Rows[i++]);
         Assert.Equal(new List<string> { "5", "センサーブロック(2)", "値", "5", "5678" }, data.Rows[i++]);
+    }
+
+    [Fact]
+    public void Number_Index_Size表示つきの場合()
+    {
+        var option = new TableFormatOption
+        {
+            UseNumberOption = true,
+            UseIndex = true,
+            UseByteSize = true
+        };
+        var data = new ParsedDataConverter(option).ConvertToTableData(result);
+
+        //タイトル
+        Assert.Equal("マルチセンサープロトコル", data.ProtocolName);
+
+        //ヘッダー
+        Assert.Equal(new List<string> { "No.", "h1", "h2", "index", "size",  "data(HEX)" }, data.GetHeaderNames());
+
+        //テーブルの中身
+        int i = 0;
+        Assert.Equal(new List<string> { "1", "センサー数", "", "0", "1", "02" }, data.Rows[i++]);
+        Assert.Equal(new List<string> { "2", "センサーブロック(1)", "センサーID", "1", "1", "01" }, data.Rows[i++]);
+        Assert.Equal(new List<string> { "3", "センサーブロック(1)", "値", "2", "2", "1234" }, data.Rows[i++]);
+        Assert.Equal(new List<string> { "4", "センサーブロック(2)", "センサーID", "4", "1", "02" }, data.Rows[i++]);
+        Assert.Equal(new List<string> { "5", "センサーブロック(2)", "値", "5", "2", "5678" }, data.Rows[i++]);
     }
 
 }

@@ -69,7 +69,8 @@ namespace BinaryParserApp.ViewModel
             var formatOption = new TableFormatOption
             {
                 UseNumberOption = true,
-                ShowIndex = true
+                UseIndex = true,
+                UseByteSize = true
             };
             var tableData = new ParsedDataConverter(formatOption).ConvertToTableData(result);
             //TableWindowを表示する

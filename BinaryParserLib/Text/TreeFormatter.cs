@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -71,11 +72,13 @@ internal class TreeFormatter
             var row = new List<string>();
             if (_option.UseNumberOption) row.Add($"{number++}");
             row.AddRange(item.Names);
-            if (_option.ShowIndex)
+            int byteSize = item.Value.Length / 2; // HEX表現なので、2文字で1バイト
+            if (_option.UseIndex)
             {
                 row.Add($"{currentByteIdx}");
-                currentByteIdx += item.Value.Length / 2; // 1文字あたり2桁のHEX表現を想定
+                currentByteIdx += byteSize;
             }
+            if (_option.UseByteSize) row.Add(byteSize.ToString());
             row.Add(item.Value);
             return row;
         }).ToList();
@@ -86,7 +89,8 @@ internal class TreeFormatter
         var headers = new List<string>();
         if (_option.UseNumberOption) headers.Add("No.");
         headers.AddRange(Enumerable.Range(1, firstNamesAndValue.Names.Count).Select(number => $"h{number}"));
-        if (_option.ShowIndex) headers.Add("index");
+        if (_option.UseIndex) headers.Add("index");
+        if (_option.UseByteSize) headers.Add("size");
         headers.Add("data(HEX)");
         return headers;
     }
