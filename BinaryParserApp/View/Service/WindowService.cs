@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading.Tasks;
+using System.Windows;
 
 namespace BinaryParserApp.View.Service
 {
@@ -17,6 +18,16 @@ namespace BinaryParserApp.View.Service
             var window = new TableWindow(viewModel);
             window.Owner = GetActiveWindow();
             window.ShowDialog();
+        }
+
+        public async Task ShowProgressWindow(Task task, CancellationTokenSource? cts = null)
+        {
+            var window = new ProgressWindow();
+            var viewModel = new ViewModel.ProgressWindowViewModel(window, task, cts);
+            window.DataContext = viewModel;
+            window.Owner = GetActiveWindow();
+            window.ShowDialog();
+            await task;
         }
 
         private static Window? GetActiveWindow()
