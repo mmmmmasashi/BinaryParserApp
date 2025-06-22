@@ -13,5 +13,20 @@ namespace BinaryParserLib.Text
 
         public string ProtocolName { get => _protocolName ?? "---"; }
         public List<List<string>> Rows { get => new List<List<string>>(_rows); }
+
+        //列名 → h1, h2, h3, ..., hN, data
+        public List<string> GetHeaderNames()
+        {
+            if (_rows.Count == 0)
+                return new List<string>();
+            var colCount = _rows[0].Count;
+            var headers = new List<string>();
+            for (int number = 1; number <= colCount - 1; number++)
+            {
+                headers.Add($"h{number}");
+            }
+            headers.Add("data");
+            return headers;
+        }
     }
 }
