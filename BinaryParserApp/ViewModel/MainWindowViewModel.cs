@@ -78,7 +78,7 @@ namespace BinaryParserApp.ViewModel
 
             var tableData = new ParsedDataConverter().ConvertToTableData(result);
             //TableWindowを表示する
-            _windowService.ShowTableWindow(tableData.GetHeaderNames(), tableData.RowsHeaderValuePair);
+            _windowService.ShowTableWindow(tableData.GetHeaderNames(), tableData.Rows);
 
         }
     }

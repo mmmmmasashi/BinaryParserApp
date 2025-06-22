@@ -9,7 +9,6 @@ namespace BinaryParserApp.View.Service
     public interface IWindowService
     {
         void ShowTextWindow(string text);
-        void ShowTableWindow(List<string> headerNames, List<Dictionary<string, string>> rows);
-
+        void ShowTableWindow(List<string> headerNames, List<List<string>> rows);
     }
 }

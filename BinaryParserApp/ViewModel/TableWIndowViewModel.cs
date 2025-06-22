@@ -7,10 +7,10 @@ namespace BinaryParserApp.ViewModel
 {
     public class TableWindowViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<Dictionary<string, string>> Rows { get; } = new();
         public List<string> Columns { get; } = new();
+        public ObservableCollection<List<string>> Rows { get; } = new();
 
-        public TableWindowViewModel(IEnumerable<string> columns, IEnumerable<Dictionary<string, string>> rows)
+        public TableWindowViewModel(IEnumerable<string> columns, IEnumerable<List<string>> rows)
         {
             Columns.AddRange(columns);
             foreach (var row in rows)

@@ -11,20 +11,14 @@ namespace BinaryParserApp.View
             InitializeComponent();
             DataContext = viewModel;
 
-            // カラムを動的に生成, vm.Columnsに列名が格納されている & Rowsに同名のキーのデータが格納
-            //例)
-            //var columns = new List<string> { "ID", "Name", "Value" };
-            //var rows = new List<Dictionary<string, object>>
-            //{
-            //    new Dictionary<string, object> { { "ID", 1 }, { "Name", "Item1" }, { "Value", 100 } },
-            //    new Dictionary<string, object> { { "ID", 2 }, { "Name", "Item2" }, { "Value", 200 } }
-            //};
-            foreach (var col in viewModel.Columns)
+            // カラムをColumnsの順に動的生成
+            for (int i = 0; i < viewModel.Columns.Count; i++)
             {
+                var colIndex = i; // クロージャ対策
                 dataGrid.Columns.Add(new DataGridTextColumn
                 {
-                    Header = col,
-                    Binding = new System.Windows.Data.Binding($"[{col}]")
+                    Header = viewModel.Columns[i],
+                    Binding = new System.Windows.Data.Binding($"[{colIndex}]")
                 });
             }
         }

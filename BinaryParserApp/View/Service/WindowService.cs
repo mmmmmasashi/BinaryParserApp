@@ -11,7 +11,7 @@ namespace BinaryParserApp.View.Service
             window.ShowDialog();
         }
 
-        public void ShowTableWindow(List<string> headerNames, List<Dictionary<string, string>> rows)
+        public void ShowTableWindow(List<string> headerNames, List<List<string>> rows)
         {
             var viewModel = new ViewModel.TableWindowViewModel(headerNames, rows);
             var window = new TableWindow(viewModel);
