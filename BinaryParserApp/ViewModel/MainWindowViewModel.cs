@@ -66,13 +66,19 @@ namespace BinaryParserApp.ViewModel
             BinaryParser parser = new BinaryParser(setting);
             ParsedData result = parser.ParseBinaryFile(BinFilePath.Value);
 
-            var tsv = new ParsedDataConverter().FormatToTsv(result);
-            var lines = new List<string>() { $"Protocol Name: {result.ProtocolName ?? "-"}" };
-            lines.AddRange(tsv);
-            string tsvText = string.Join(Environment.NewLine, lines);
+            //TODO:delete
+            //var tsv = new ParsedDataConverter().FormatToTsv(result);
+            //var lines = new List<string>() { $"Protocol Name: {result.ProtocolName ?? "-"}" };
+            //lines.AddRange(tsv);
+            //string tsvText = string.Join(Environment.NewLine, lines);
 
-            //TextWindowを表示する
-            _windowService.ShowTextWindow(tsvText);
+            ////TextWindowを表示する
+            //_windowService.ShowTextWindow(tsvText);
+
+
+            var tableData = new ParsedDataConverter().ConvertToTableData(result);
+            //TableWindowを表示する
+            _windowService.ShowTableWindow(tableData.GetHeaderNames(), tableData.RowsHeaderValuePair);
 
         }
     }

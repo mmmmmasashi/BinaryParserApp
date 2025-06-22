@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace BinaryParserApp.View.Service
 {
@@ -12,9 +7,21 @@ namespace BinaryParserApp.View.Service
         public void ShowTextWindow(string text)
         {
             var window = new View.TextWindow(text);
-            window.Owner = System.Windows.Application.Current.Windows
-                        .OfType<Window>().FirstOrDefault(w => w.IsActive);
+            window.Owner = GetActiveWindow();
             window.ShowDialog();
+        }
+
+        public void ShowTableWindow(List<string> headerNames, List<Dictionary<string, string>> rows)
+        {
+            var viewModel = new ViewModel.TableWindowViewModel(headerNames, rows);
+            var window = new TableWindow(viewModel);
+            window.Owner = GetActiveWindow();
+            window.ShowDialog();
+        }
+
+        private static Window? GetActiveWindow()
+        {
+            return Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
         }
     }
 }
