@@ -40,41 +40,56 @@ namespace BinaryParserApp.ViewModel
 
             ConvertCommand = canConvert.ToReactiveCommand();
 
-            ConvertCommand.Subscribe(_ => Convert());
+            ConvertCommand.Subscribe(async _ => await ConvertAsync());
         }
-        private void Convert()
+        private async Task ConvertAsync()
         {
-            // 設定に保存
-            Properties.Settings.Default.JsonFilePath = JsonFilePath.Value;
-            Properties.Settings.Default.BinFilePath = BinFilePath.Value;
-            Properties.Settings.Default.Save();
-
-            //ファイルパスがなければエラーダイアログ表示で終了
-            //JSONファイルパスチェック
-            if (string.IsNullOrWhiteSpace(JsonFilePath.Value))
+            try
             {
-                throw new FileNotFoundException(JsonFilePath.Value);
+                // 設定に保存
+                Properties.Settings.Default.JsonFilePath = JsonFilePath.Value;
+                Properties.Settings.Default.BinFilePath = BinFilePath.Value;
+                Properties.Settings.Default.Save();
+
+                //ファイルパスがなければエラーダイアログ表示で終了
+                //JSONファイルパスチェック
+                if (string.IsNullOrWhiteSpace(JsonFilePath.Value))
+                {
+                    throw new FileNotFoundException(JsonFilePath.Value);
+                }
+
+                //BINファイルパスチェック
+                if (string.IsNullOrWhiteSpace(BinFilePath.Value))
+                {
+                    throw new FileNotFoundException(BinFilePath.Value);
+                }
+
+                // 非同期でパース処理を実行
+                var task = Task.Run<TableData>(() =>
+                {
+                    ProtocolSetting setting = ProtocolSetting.FromJsonFile(JsonFilePath.Value);
+                    BinaryParser parser = new BinaryParser(setting);
+                    ParsedData result = parser.ParseBinaryFile(BinFilePath.Value);
+
+                    var formatOption = new TableFormatOption
+                    {
+                        UseNumberOption = true,
+                        UseIndex = true,
+                        UseByteSize = true
+                    };
+                    return new ParsedDataConverter(formatOption).ConvertToTableData(result);
+                });
+
+                // プログレスウィンドウを表示
+                await _windowService.ShowProgressWindow(task);
+                var tableData = task.Result;
+                //TableWindowを表示する
+                _windowService.ShowTableWindow(tableData.GetHeaderNames(), tableData.Rows);
             }
-
-            //BINファイルパスチェック
-            if (string.IsNullOrWhiteSpace(BinFilePath.Value))
+            catch (Exception ex)
             {
-                throw new FileNotFoundException(BinFilePath.Value);
+                MessageBox.Show(ex.Message, "エラー", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            ProtocolSetting setting = ProtocolSetting.FromJsonFile(JsonFilePath.Value);
-            BinaryParser parser = new BinaryParser(setting);
-            ParsedData result = parser.ParseBinaryFile(BinFilePath.Value);
-
-            var formatOption = new TableFormatOption
-            {
-                UseNumberOption = true,
-                UseIndex = true,
-                UseByteSize = true
-            };
-            var tableData = new ParsedDataConverter(formatOption).ConvertToTableData(result);
-            //TableWindowを表示する
-            _windowService.ShowTableWindow(tableData.GetHeaderNames(), tableData.Rows);
 
         }
     }
