@@ -1,0 +1,9 @@
+﻿{
+	"protocolName": "Protocol X",
+	"structure": [
+		{
+			"type": "bytes",
+			"size": 1
+		}
+	]
+}

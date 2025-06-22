@@ -28,6 +28,9 @@
     <None Update="TestData\001_min.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\001_minset_noname.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\001_minset.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

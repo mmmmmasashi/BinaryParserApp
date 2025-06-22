@@ -42,6 +42,18 @@ public class BasicScenarioTest
     }
 
     [Fact]
+    public void 基本的なバイナリ入力シナリオ1_nameフィールドなしもOK()
+    {
+        var result = ParseBySettingAndBin("001_minset_noname.json", "001_min.bin");
+        Assert.Equal("Protocol X", result.ProtocolName);
+        Assert.Single(result.RootFields);
+        var field = result.RootFields[0];
+
+        Assert.Equal("", field.Name);//ない場合は空文字列
+        Assert.Equal("00", field.HexStr);
+    }
+
+    [Fact]
     public void 基本的なバイナリ入力シナリオ2()
     {
         var result = ParseBySettingAndBin("002_minset.json", "002_min.bin");
