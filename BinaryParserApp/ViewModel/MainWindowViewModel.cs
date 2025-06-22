@@ -64,11 +64,14 @@ namespace BinaryParserApp.ViewModel
                     throw new FileNotFoundException(BinFilePath.Value);
                 }
 
+                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                var token = cancellationTokenSource.Token;
+
                 // 非同期でパース処理を実行
                 var task = Task.Run<TableData>(() =>
                 {
                     ProtocolSetting setting = ProtocolSetting.FromJsonFile(JsonFilePath.Value);
-                    BinaryParser parser = new BinaryParser(setting);
+                    BinaryParser parser = new BinaryParser(setting, token);
                     ParsedData result = parser.ParseBinaryFile(BinFilePath.Value);
 
                     var formatOption = new TableFormatOption
@@ -78,13 +81,18 @@ namespace BinaryParserApp.ViewModel
                         UseByteSize = true
                     };
                     return new ParsedDataConverter(formatOption).ConvertToTableData(result);
-                });
+                }, token);
 
                 // プログレスウィンドウを表示
-                await _windowService.ShowProgressWindow(task);
+                await _windowService.ShowProgressWindow(task, cancellationTokenSource);
                 var tableData = task.Result;
                 //TableWindowを表示する
                 _windowService.ShowTableWindow(tableData.GetHeaderNames(), tableData.Rows);
+            }
+            catch (OperationCanceledException)
+            {
+                //ユーザー操作によるキャンセルなので優しく終わる
+                MessageBox.Show("処理を中断しました", "中断", MessageBoxButton.OK);
             }
             catch (Exception ex)
             {

@@ -10,6 +10,6 @@ namespace BinaryParserApp.View.Service
     {
         void ShowTextWindow(string text);
         void ShowTableWindow(List<string> headerNames, List<List<string>> rows);
-        Task ShowProgressWindow(Task task);
+        Task ShowProgressWindow(Task task, CancellationTokenSource? cts = null);
     }
 }

@@ -20,10 +20,10 @@ namespace BinaryParserApp.View.Service
             window.ShowDialog();
         }
 
-        public async Task ShowProgressWindow(Task task)
+        public async Task ShowProgressWindow(Task task, CancellationTokenSource? cts = null)
         {
             var window = new ProgressWindow();
-            var viewModel = new ViewModel.ProgressWindowViewModel(window, task);
+            var viewModel = new ViewModel.ProgressWindowViewModel(window, task, cts);
             window.DataContext = viewModel;
             window.Owner = GetActiveWindow();
             window.ShowDialog();

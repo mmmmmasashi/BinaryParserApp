@@ -8,6 +8,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
         <TextBlock Text="バイナリファイルを解析中..."
@@ -18,5 +19,6 @@
         <ProgressBar Grid.Row="1" 
                      Height="20"
                      IsIndeterminate="True"/>
+        <Button Grid.Row="2" Content="中断" Command="{Binding CancelCommand}" Margin="0,16,0,0" HorizontalAlignment="Center" Width="80"/>
     </Grid>
 </Window>
