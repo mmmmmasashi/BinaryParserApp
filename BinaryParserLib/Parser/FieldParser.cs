@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 
 namespace BinaryParserLib.Parser;
 
+
+
 internal class FieldParser
 {
-    internal void ParseField(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent)
+    internal void ParseField(IBinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent)
     {
         //ブロックの場合
         if (setting.IsBlock)
@@ -23,7 +25,7 @@ internal class FieldParser
         }
     }
 
-    private void ParseNonBlockField(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent)
+    private void ParseNonBlockField(IBinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent)
     {
         //固定サイズの場合
         if (setting.Repeat is int repeatFixedCount && repeatFixedCount > 0)
@@ -41,7 +43,7 @@ internal class FieldParser
         }
     }
 
-    private void ParseBlockField(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent)
+    private void ParseBlockField(IBinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent)
     {
         var content = setting.Content;
         if (content == null) throw new InvalidDataException();//空のブロック？
@@ -75,7 +77,7 @@ internal class FieldParser
         }
     }
 
-    private void ParseCopiedBlock(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent, int repeatCount)
+    private void ParseCopiedBlock(IBinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent, int repeatCount)
     {
         foreach (var number in Enumerable.Range(1, repeatCount))
         {
@@ -84,14 +86,14 @@ internal class FieldParser
         }
     }
 
-    private static void ParseSingleField(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent)
+    private static void ParseSingleField(IBinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent)
     {
         var byteSize = setting.ByteSize;
         var fieldData = reader.ReadBytes(byteSize).ToArray();
         fieldListCurrent.Add(new Field(setting.Id, setting.Name, fieldData));
     }
 
-    private void ParseVariableSizeRepeatFields(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent, string repeatById)
+    private void ParseVariableSizeRepeatFields(IBinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent, string repeatById)
     {
         int repeatCount = FindRepeatCount(fieldListCurrent, repeatById);
 
@@ -115,7 +117,7 @@ internal class FieldParser
         return repeatField.ParseToInt();
     }
 
-    private void ParseFixedSizeRepeatFields(BinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent, int repeatFixedCount)
+    private void ParseFixedSizeRepeatFields(IBinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent, int repeatFixedCount)
     {
         for (int i = 0; i < repeatFixedCount; i++)
         {
