@@ -12,7 +12,7 @@ namespace BinaryParserApp;
 /// </summary>
 public partial class App : Application
 {
-    public static IServiceProvider Services { get; private set; }
+    public IServiceProvider? Services { get; private set; }
 
     public App()
     {
@@ -65,7 +65,7 @@ public partial class App : Application
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+    private void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
     {
         var exception = e.Exception.InnerException as Exception;
         if (ConfirmUnhandledException(exception, "バックグラウンドタスク"))
@@ -84,10 +84,10 @@ public partial class App : Application
     /// <param name="e">例外オブジェクト</param>
     /// <param name="sourceName">発生したスレッドの種別を示す文字列</param>
     /// <returns>継続することが選択された場合は true, それ以外は false</returns>
-    bool ConfirmUnhandledException(Exception e, string sourceName)
+    bool ConfirmUnhandledException(Exception? e, string sourceName)
     {
         var message = $"予期せぬエラーが発生しました。続けて発生する場合は開発者に報告してください。\nプログラムの実行を継続しますか？";
-        if (e != null) message += $"\n({e.Message} @ {e.TargetSite.Name})";
+        if (e != null) message += $"\n({e.Message} @ {e.TargetSite?.Name ?? "-"})";
         // Logger.Fatal($"未処理例外 ({sourceName})", e); // 適当なログ記録
         var result = MessageBox.Show(message, $"未処理例外 ({sourceName})", MessageBoxButton.YesNo, MessageBoxImage.Warning);
         return result == MessageBoxResult.Yes;
@@ -102,7 +102,7 @@ public partial class App : Application
     {
         var exception = e.ExceptionObject as Exception;
         var message = $"予期せぬエラーが発生しました。続けて発生する場合は開発者に報告してください。";
-        if (exception != null) message += $"\n({exception.Message} @ {exception.TargetSite.Name})";
+        if (exception != null) message += $"\n({exception.Message} @ {exception.TargetSite?.Name ?? "-"})";
         // Logger.Fatal("未処理例外", exception); // 適当なログ記録
         MessageBox.Show(message, "未処理例外", MessageBoxButton.OK, MessageBoxImage.Stop);
         Environment.Exit(1);
