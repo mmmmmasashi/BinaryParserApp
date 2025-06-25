@@ -46,6 +46,27 @@ public class BinaryParser(ProtocolSetting setting, CancellationToken? token = nu
             new FieldParser().ParseField(reader, eachRawSetting, fieldList);
         }
 
+        // 残りのデータがある場合は「未定義」フィールドとして追加
+        try
+        {
+            var buffer = new List<byte>();
+            while (true)
+            {
+                var data = reader.ReadBytes(1);
+                if (data.Length == 0) break;
+                buffer.AddRange(data);
+            }
+
+            if (buffer.Count > 0)
+            {
+                fieldList.Add(new Field(null, "undefined", buffer.ToArray()));
+            }
+        }
+        catch (Exception)
+        {
+            // データの終端に達した場合は正常終了
+        }
+
         return new ParsedData(_setting.ProtocolName, fieldList.ToArray());
     }
 
