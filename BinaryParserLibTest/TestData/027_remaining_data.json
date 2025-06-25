@@ -1,0 +1,9 @@
+{
+    "protocolName": "残りデータテスト",
+    "structure": [
+        {
+            "name": "firstByte",
+            "size": 1
+        }
+    ]
+}

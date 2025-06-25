@@ -269,4 +269,20 @@ public class BasicScenarioTest
         Assert.Equal("field2", childBlock.Children[1].Name);
         Assert.Equal("0203", childBlock.Children[1].HexStr);
     }
+
+    [Fact]
+    public void 設定ファイルで定義されていない残りのデータがある場合は未定義フィールドとして取得できる()
+    {
+        var result = ParseBySettingAndBin("027_remaining_data.json", "027_remaining_data.bin");
+        Assert.Equal("残りデータテスト", result.ProtocolName);
+        Assert.Equal(2, result.RootFields.Count);
+
+        // 定義済みフィールドの確認
+        Assert.Equal("firstByte", result.RootFields[0].Name);
+        Assert.Equal("30", result.RootFields[0].HexStr);
+
+        // 未定義フィールドの確認
+        Assert.Equal("undefined", result.RootFields[1].Name);
+        Assert.Equal("3130323033", result.RootFields[1].HexStr);
+    }
 }
