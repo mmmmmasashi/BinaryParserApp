@@ -1,11 +1,12 @@
 ﻿<Window x:Class="BinaryParserApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="バイナリ解析" Height="160" Width="500">
+        Title="{Binding TitleText}" Height="200" Width="560">
     <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -14,15 +15,17 @@
         </Grid.ColumnDefinitions>
 
         <!-- JSON設定ファイルパス -->
-        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,10">設定ファイル(JSON)</TextBlock>
-        <TextBox Grid.Row="0" Grid.Column="1" Name="JsonPathTextBox" Margin="0,0,0,10" Text="{Binding JsonFilePath.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">設定ファイルパス(JSON)</TextBlock>
+        <TextBox Grid.Row="0" Grid.Column="1" Name="JsonPathTextBox" Margin="4" VerticalContentAlignment="Center" Text="{Binding JsonFilePath.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
         <!-- BINファイルパス -->
-        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,10">バイナリファイル(BIN)</TextBlock>
-        <TextBox Grid.Row="1" Grid.Column="1" Name="BinPathTextBox" Margin="0,0,0,10" Text="{Binding BinFilePath.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">解析対象入力※</TextBlock>
+        <TextBox Grid.Row="1" Grid.Column="1" Name="BinPathTextBox"  Margin="4" VerticalContentAlignment="Center" Text="{Binding BinFilePath.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center">※バイナリファイルパス or HEX文字列を入力してください 例) 12-AB-CD / 12ABCD / 12_AB_CD</TextBlock>
 
         <!-- 変換ボタン -->
-        <Button Grid.Row="2" Grid.Column="1" Command="{Binding ConvertCommand}"
+        <Button Grid.Row="3" Grid.Column="1" Command="{Binding ConvertCommand}"
                 Name="ConvertButton" Content="変換" Width="100" HorizontalAlignment="Right"/>
         
     </Grid>
