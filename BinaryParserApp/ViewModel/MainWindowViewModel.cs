@@ -87,7 +87,9 @@ namespace BinaryParserApp.ViewModel
                 {
                     ProtocolSetting setting = ProtocolSetting.FromJsonFile(JsonFilePath.Value);
                     BinaryParser parser = new BinaryParser(setting, token);
-                    ParsedData result = parser.ParseBinaryFile(BinFilePath.Value);
+
+                    ParsedData result = (File.Exists(BinFilePath.Value)) ? 
+                        parser.ParseBinaryFile(BinFilePath.Value) : parser.ParseBinaryString(BinFilePath.Value);
 
                     var formatOption = new TableFormatOption
                     {
