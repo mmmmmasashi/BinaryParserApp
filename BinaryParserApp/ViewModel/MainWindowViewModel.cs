@@ -16,6 +16,7 @@ namespace BinaryParserApp.ViewModel
     public class MainWindowViewModel
     {
         private readonly IWindowService _windowService;
+        public string TitleText { get; private set; }
 
         // JSON設定ファイルパス
         public ReactiveProperty<string> JsonFilePath { get; set; }
@@ -29,7 +30,7 @@ namespace BinaryParserApp.ViewModel
         public MainWindowViewModel(IWindowService windowService)
         {
             _windowService = windowService;
-
+            TitleText = CreateAppTitle();
             // 設定から前回値を復元
             JsonFilePath = new ReactiveProperty<string>(Properties.Settings.Default.JsonFilePath);
             BinFilePath = new ReactiveProperty<string>(Properties.Settings.Default.BinFilePath);
@@ -42,6 +43,20 @@ namespace BinaryParserApp.ViewModel
 
             ConvertCommand.Subscribe(async _ => await ConvertAsync());
         }
+
+        /// <summary>
+        /// タイトル文字列の作成 例)「BinaryParserApp ver1.0.1.0」
+        /// </summary>
+        private string? CreateAppTitle()
+        {
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            if (version == null)
+            {
+                return "BinaryParserApp";
+            }
+            return $"BinaryParserApp ver{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+        }
+
         private async Task ConvertAsync()
         {
             try
