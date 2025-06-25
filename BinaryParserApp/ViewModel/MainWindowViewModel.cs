@@ -47,7 +47,7 @@ namespace BinaryParserApp.ViewModel
         /// <summary>
         /// タイトル文字列の作成 例)「BinaryParserApp ver1.0.1.0」
         /// </summary>
-        private string? CreateAppTitle()
+        private string CreateAppTitle()
         {
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             if (version == null)
