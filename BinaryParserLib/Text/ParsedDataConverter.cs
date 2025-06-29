@@ -30,7 +30,7 @@ public class ParsedDataConverter
     public TableData ConvertToTableData(ParsedData result)
     {
         var root = new Field(null, GetRootName(result), null, result.RootFields.ToList());
-        return new TreeFormatter(_opt).ToTableData<Field>(root);
+        return new TreeFormatter(_opt).ToTableData(root);
     }
 
     private string GetRootName(ParsedData data) => data.ProtocolName ?? "---";

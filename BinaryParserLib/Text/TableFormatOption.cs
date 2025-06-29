@@ -11,5 +11,6 @@ namespace BinaryParserLib.Text
         public bool UseNumberOption { get; set; } = false;
         public bool UseIndex { get; set; } = false;
         public bool UseByteSize { get; set; } = false;
+        public bool UseParsedValue { get; set; } = false;
     }
 }

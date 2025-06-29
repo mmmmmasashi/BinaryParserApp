@@ -1,7 +1,10 @@
 ﻿using BinaryParserLib.Parsed;
+using BinaryParserLib.Parser;
+using BinaryParserLib.Protocol;
 using BinaryParserLib.Text;
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -157,6 +160,35 @@ public class TreeFormatterTest
         Assert.Equal(new List<string> { "3", "センサーブロック(1)", "値", "2", "2", "1234" }, data.Rows[i++]);
         Assert.Equal(new List<string> { "4", "センサーブロック(2)", "センサーID", "4", "1", "02" }, data.Rows[i++]);
         Assert.Equal(new List<string> { "5", "センサーブロック(2)", "値", "5", "2", "5678" }, data.Rows[i++]);
+    }
+
+    [Fact]
+    public void 解釈済の値ありの場合()
+    {
+        ProtocolSetting setting = ProtocolSetting.FromJsonFile(Constants.GetPathOf("028_ascii.json"));
+        BinaryParser parser = new BinaryParser(setting);
+        var result = parser.ParseBinaryFile(Constants.GetPathOf("028_ascii.bin"));
+
+        var option = new TableFormatOption
+        {
+            UseNumberOption = true,
+            UseIndex = true,
+            UseByteSize = true,
+            UseParsedValue = true
+        };
+        var data = new ParsedDataConverter(option).ConvertToTableData(result);
+
+        //タイトル
+        Assert.Equal("ASCII文字列テスト", data.ProtocolName);
+
+        //ヘッダー
+        Assert.Equal(new List<string> { "No.", "h1", "index", "size", "data(HEX)", "value" }, data.GetHeaderNames());
+
+        //テーブルの中身
+        int i = 0;
+        Assert.Equal(new List<string> { "1", "Hello byte!", "0", "1", "01", "" }, data.Rows[i++]);
+        Assert.Equal(new List<string> { "2", "ascii3chars", "1", "3", "414243", "ABC"}, data.Rows[i++]);
+
     }
 
 }

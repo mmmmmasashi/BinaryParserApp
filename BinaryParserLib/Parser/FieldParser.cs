@@ -90,7 +90,7 @@ internal class FieldParser
     {
         var byteSize = setting.ByteSize;
         var fieldData = reader.ReadBytes(byteSize).ToArray();
-        fieldListCurrent.Add(new Field(setting.Id, setting.Name, fieldData));
+        fieldListCurrent.Add(new Field(setting.Id, setting.Name, fieldData, null, setting.Type));
     }
 
     private void ParseVariableSizeRepeatFields(IBinaryReader reader, FieldSetting setting, List<Field> fieldListCurrent, string repeatById)

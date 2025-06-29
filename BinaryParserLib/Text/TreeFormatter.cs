@@ -30,10 +30,13 @@ internal class TreeFormatter
     {
         public List<string> Names { get; set; }
         public string Value { get; set; }
-        public NamesAndValue(List<string> names, string value)
+        public string ParsedValue { get; set; }
+
+        public NamesAndValue(List<string> names, string value, string parsedValue)
         {
             Names = names;
             Value = value;
+            ParsedValue = parsedValue;
         }
 
         internal NamesAndValue AlignHierarchy(int maxDepth)
@@ -41,7 +44,7 @@ internal class TreeFormatter
             // 名前の深さに応じて空要素を追加
             var countOfBlank = maxDepth - Names.Count;
             var blanks = Enumerable.Repeat(string.Empty, countOfBlank).ToList();
-            return new NamesAndValue(Names.Concat(blanks).ToList(), Value);
+            return new NamesAndValue(Names.Concat(blanks).ToList(), Value, ParsedValue);
         }
     }
 
@@ -80,6 +83,7 @@ internal class TreeFormatter
             }
             if (_option.UseByteSize) row.Add(byteSize.ToString());
             row.Add(item.Value);
+            if (_option.UseParsedValue) row.Add(item.ParsedValue);
             return row;
         }).ToList();
     }
@@ -92,6 +96,7 @@ internal class TreeFormatter
         if (_option.UseIndex) headers.Add("index");
         if (_option.UseByteSize) headers.Add("size");
         headers.Add("data(HEX)");
+        if (_option.UseParsedValue) headers.Add("value");
         return headers;
     }
 
@@ -100,10 +105,10 @@ internal class TreeFormatter
     /// </summary>
     private List<NamesAndValue> ToHierarchicalNamesAndValueList<T>(T node) where T : ITreeNode<T>
     {
-        var namesAndValueList = new List<(List<string>, string)>();
+        var namesAndValueList = new List<(List<string>, string, string)>();
         var names = new List<string>();
         ToNamesAndHexStr(node, namesAndValueList, names, isTopNode:true);
-        return namesAndValueList.Select(item => new NamesAndValue(item.Item1, item.Item2)).ToList();
+        return namesAndValueList.Select(item => new NamesAndValue(item.Item1, item.Item2, item.Item3)).ToList();
     }
 
     /// <summary>
@@ -111,7 +116,7 @@ internal class TreeFormatter
     /// </summary>
     private void ToNamesAndHexStr<T>(
         T node,
-        List<(List<string>, string)> namesAndValueList,
+        List<(List<string>, string, string)> namesAndValueList,
         List<string> namesCurrent,
         bool isTopNode) where T : ITreeNode<T>
     {
@@ -125,7 +130,7 @@ internal class TreeFormatter
         if (isLeaf)
         {
             // リーフノードの場合、名前と値を追加
-            var newLine = (new List<string>(namesCurrent), node.HexStr) ;//注意 : 新しくリストを作らないと、登録済のリストが消されてしまう
+            var newLine = (new List<string>(namesCurrent), node.HexStr, node.ParsedValue) ;//注意 : 新しくリストを作らないと、登録済のリストが消されてしまう
             namesAndValueList.Add(newLine);
         }
         else

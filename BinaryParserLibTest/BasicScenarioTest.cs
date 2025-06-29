@@ -301,4 +301,13 @@ public class BasicScenarioTest
         var fieldWithAF = new Field(null, "test", new byte[] { 0xab, 0xcd, 0xef }, null);
         Assert.Equal("ABCDEF", fieldWithAF.HexStr);
     }
+
+    [Fact]
+    public void asciiをtypeに書くとASCII文字列と解釈して表示する()
+    {
+        var result = ParseBySettingAndBin("028_ascii.json", "028_ascii.bin");
+        Assert.Equal("ASCII文字列テスト", result.ProtocolName);
+        var field = result.RootFields[1];
+        Assert.Equal("ABC", field.ParsedValue);
+    }
 }
