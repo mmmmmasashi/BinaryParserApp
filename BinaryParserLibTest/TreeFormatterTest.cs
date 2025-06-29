@@ -186,7 +186,7 @@ public class TreeFormatterTest
 
         //テーブルの中身
         int i = 0;
-        Assert.Equal(new List<string> { "1", "Hello byte!", "0", "1", "01", "" }, data.Rows[i++]);
+        Assert.Equal(new List<string> { "1", "Hello byte!", "0", "1", "01", "-" }, data.Rows[i++]);
         Assert.Equal(new List<string> { "2", "ascii3chars", "1", "3", "414243", "ABC"}, data.Rows[i++]);
 
     }

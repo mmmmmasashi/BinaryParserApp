@@ -122,8 +122,9 @@ namespace BinaryParserApp.ViewModel
                     ProtocolSetting setting = ProtocolSetting.FromJsonFile(settingFilePath);
                     BinaryParser parser = new BinaryParser(setting, token);
 
-                    ParsedData result = (File.Exists(BinFilePath.Value)) ? 
-                        parser.ParseBinaryFile(BinFilePath.Value) : parser.ParseBinaryString(BinFilePath.Value);
+                    var binFilePathClean = PathUtil.RemoveDoubleQuatation(BinFilePath.Value);
+                    ParsedData result = (File.Exists(binFilePathClean)) ? 
+                        parser.ParseBinaryFile(binFilePathClean) : parser.ParseBinaryString(binFilePathClean);
 
                     var formatOption = new TableFormatOption
                     {
