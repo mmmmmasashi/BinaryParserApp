@@ -16,7 +16,9 @@
 
         <!-- JSON設定ファイルパス -->
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">設定ファイルパス(JSON)</TextBlock>
-        <TextBox Grid.Row="0" Grid.Column="1" Name="JsonPathTextBox" Margin="4" VerticalContentAlignment="Center" Text="{Binding JsonFilePath.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <ComboBox Grid.Row="0" Grid.Column="1" Name="JsonPathComboBox" Margin="4" IsEditable="True" IsTextSearchEnabled="True"
+                  VerticalContentAlignment="Center" Text="{Binding JsonFilePath.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  ItemsSource="{Binding SettingFileCandidates}"/>
 
         <!-- BINファイルパス -->
         <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">解析対象入力※</TextBlock>

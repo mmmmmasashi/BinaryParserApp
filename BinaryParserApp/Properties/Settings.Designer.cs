@@ -46,5 +46,16 @@ namespace BinaryParserApp.Properties {
                 this["BinFilePath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection JsonFilePathHistory {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["JsonFilePathHistory"]));
+            }
+            set {
+                this["JsonFilePathHistory"] = value;
+            }
+        }
     }
 }
