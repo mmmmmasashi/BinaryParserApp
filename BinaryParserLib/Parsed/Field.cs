@@ -16,17 +16,21 @@ public class Field : ITreeNode<Field>
     public byte[]? Bytes { get; }
     public List<Field> Children { get; }
     private string? _fieldType { get; init; } = null;
+
+    private const string ParseNone = "-";
     public string ParsedValue
     {
         get
         {
-            if (_fieldType is null) return string.Empty;
+            if (_fieldType is null) return ParseNone;
+            if (Bytes is null) return ParseNone;
+            if (_fieldType == "uint8") return Bytes[0].ToString();
+            if (_fieldType == "uint16") return ParseToInt().ToString();
             if (_fieldType == "ascii")
             {
-                if (Bytes is null) return string.Empty;
                 return Encoding.ASCII.GetString(Bytes);
             }
-            return string.Empty;
+            return ParseNone;
         }
     }
 

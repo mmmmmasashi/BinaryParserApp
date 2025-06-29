@@ -303,11 +303,21 @@ public class BasicScenarioTest
     }
 
     [Fact]
-    public void asciiをtypeに書くとASCII文字列と解釈して表示する()
+    public void asciiをtypeに書くとASCII文字列と解釈して表示する_uint8_uint16も合わせてテストする()
     {
         var result = ParseBySettingAndBin("028_ascii.json", "028_ascii.bin");
         Assert.Equal("ASCII文字列テスト", result.ProtocolName);
+
         var field = result.RootFields[1];
         Assert.Equal("ABC", field.ParsedValue);
+        Assert.Equal("414243", field.HexStr); // ASCIIのA=0x41, B=0x42, C=0x43
+
+        var fieldUint8_10 = result.RootFields[2];
+        Assert.Equal("16", fieldUint8_10.ParsedValue);
+        Assert.Equal("10", fieldUint8_10.HexStr);
+
+        var fieldUint16_1234 = result.RootFields[3];
+        Assert.Equal("4660", fieldUint16_1234.ParsedValue); // 0x1234は4660
+        Assert.Equal("3412", fieldUint16_1234.HexStr); // 0x1234のHEX表記
     }
 }
