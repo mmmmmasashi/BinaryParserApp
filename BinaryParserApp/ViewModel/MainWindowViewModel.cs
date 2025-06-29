@@ -1,11 +1,14 @@
 ﻿using BinaryParserApp.View.Service;
+using BinaryParserLib.Common;
 using BinaryParserLib.Parsed;
 using BinaryParserLib.Parser;
 using BinaryParserLib.Protocol;
+using BinaryParserLib.Setting;
 using BinaryParserLib.Text;
 using Reactive.Bindings;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.IO.Compression;
 using System.Reactive.Linq;
@@ -31,21 +34,21 @@ namespace BinaryParserApp.ViewModel
         // 変換コマンド
         public ReactiveCommand ConvertCommand { get; }
 
+        private SettingsFileHistory _settingsFileHistory;
+
         public MainWindowViewModel(IWindowService windowService)
         {
+            var history = Properties.Settings.Default.JsonFilePathHistory;
+            _settingsFileHistory = new SettingsFileHistory(history);
+            SettingFileCandidates = new ObservableCollection<string>(_settingsFileHistory.GetHistory());
+
             _windowService = windowService;
             TitleText = CreateAppTitle();
             // 設定から前回値を復元
             JsonFilePath = new ReactiveProperty<string>(Properties.Settings.Default.JsonFilePath);
             BinFilePath = new ReactiveProperty<string>(Properties.Settings.Default.BinFilePath);
 
-            // ダミーデータとして設定ファイルの候補を追加
-            SettingFileCandidates = new ObservableCollection<string>
-            {
-                @"BinaryParserLibTest/TestData/001_minset.json",
-                @"BinaryParserLibTest/TestData/002_minset.json",
-                @"BinaryParserLibTest/TestData/003_multi_fields.json"
-            };
+            
 
             // 両方のパスが入力されているときだけボタンを有効化
             var canConvert = JsonFilePath
@@ -94,10 +97,25 @@ namespace BinaryParserApp.ViewModel
                 CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
                 var token = cancellationTokenSource.Token;
 
+                var settingFilePath = PathUtil.RemoveDoubleQuatation(JsonFilePath.Value);
+
+                //設定ファイルが履歴に存在しない場合は、履歴に追加
+                if (!_settingsFileHistory.GetHistory().Contains(settingFilePath))
+                {
+                    _settingsFileHistory.Add(settingFilePath);
+                    SettingFileCandidates.Add(settingFilePath);
+
+                    // 履歴を保存
+                    var storage = new StringCollection();
+                    _settingsFileHistory.SaveToStorage(storage);
+                    Properties.Settings.Default.JsonFilePathHistory = storage;
+                    Properties.Settings.Default.Save();
+                }
+
                 // 非同期でパース処理を実行
                 var task = Task.Run<TableData>(() =>
                 {
-                    ProtocolSetting setting = ProtocolSetting.FromJsonFile(JsonFilePath.Value);
+                    ProtocolSetting setting = ProtocolSetting.FromJsonFile(settingFilePath);
                     BinaryParser parser = new BinaryParser(setting, token);
 
                     ParsedData result = (File.Exists(BinFilePath.Value)) ? 

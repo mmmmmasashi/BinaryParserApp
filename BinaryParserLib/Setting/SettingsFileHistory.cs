@@ -25,7 +25,7 @@ namespace BinaryParserLib.Setting
             }
         }
 
-        internal void Add(string testPath)
+        public void Add(string testPath)
         {
             if (!_history.Contains(testPath))
             {
@@ -33,12 +33,12 @@ namespace BinaryParserLib.Setting
             }
         }
 
-        internal List<string> GetHistory()
+        public List<string> GetHistory()
         {
             return _history.ToList();
         }
 
-        internal void SaveToStorage(StringCollection storage)
+        public void SaveToStorage(StringCollection storage)
         {
             storage.Clear();
             foreach (var item in _history)

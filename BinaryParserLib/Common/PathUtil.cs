@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace BinaryParserLib.Common
 {
-    internal class PathUtil
+    public class PathUtil
     {
 
         /// <summary>
         /// 先頭と末尾にあるダブルクォーテーションがあれば削除する
         /// </summary>
-        internal static string RemoveDoubleQuatation(string filePath)
+        public static string RemoveDoubleQuatation(string filePath)
         {
             if (filePath.StartsWith("\"") && filePath.EndsWith("\""))
             {
