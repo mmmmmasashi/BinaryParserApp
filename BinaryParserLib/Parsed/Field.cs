@@ -12,7 +12,7 @@ public class Field : ITreeNode<Field>
 {
     public string? Id { get; }
     public string Name { get; }
-    public string HexStr { get => (Bytes is null)? "--" : string.Concat(Bytes.Select(b => b.ToString("x2"))); }
+    public string HexStr { get => (Bytes is null)? "--" : string.Concat(Bytes.Select(b => b.ToString("X2"))); }
     public byte[]? Bytes { get; }
     public List<Field> Children { get; }
 
