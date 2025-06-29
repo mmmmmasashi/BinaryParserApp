@@ -129,7 +129,8 @@ namespace BinaryParserApp.ViewModel
                     {
                         UseNumberOption = true,
                         UseIndex = true,
-                        UseByteSize = true
+                        UseByteSize = true,
+                        UseParsedValue = true,
                     };
                     return new ParsedDataConverter(formatOption).ConvertToTableData(result);
                 }, token);

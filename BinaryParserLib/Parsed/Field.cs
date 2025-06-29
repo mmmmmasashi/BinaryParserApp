@@ -15,6 +15,24 @@ public class Field : ITreeNode<Field>
     public string HexStr { get => (Bytes is null)? "--" : string.Concat(Bytes.Select(b => b.ToString("X2"))); }
     public byte[]? Bytes { get; }
     public List<Field> Children { get; }
+    private string? _fieldType { get; init; } = null;
+
+    private const string ParseNone = "-";
+    public string ParsedValue
+    {
+        get
+        {
+            if (_fieldType is null) return ParseNone;
+            if (Bytes is null) return ParseNone;
+            if (_fieldType == "uint8") return Bytes[0].ToString();
+            if (_fieldType == "uint16") return ParseToInt().ToString();
+            if (_fieldType == "ascii")
+            {
+                return Encoding.ASCII.GetString(Bytes);
+            }
+            return ParseNone;
+        }
+    }
 
     public string ToLine()
     {
@@ -24,12 +42,13 @@ public class Field : ITreeNode<Field>
         return $"{namePart} : {hexPart}";
     }
 
-    public Field(string? id, string name, byte[]? data, List<Field>? children = null)
+    public Field(string? id, string name, byte[]? data, List<Field>? children = null, string? fieldType = null)
     {
         Id = id;
         Bytes = data;
         Name = name;
         Children = new List<Field>();
+        _fieldType = fieldType;
         if (children is not null) Children.AddRange(children);
     }
 

@@ -15,4 +15,5 @@ public interface ILine
     public string ToLine();
     public string Name { get; }
     public string HexStr { get; }
+    public string ParsedValue { get; }
 }

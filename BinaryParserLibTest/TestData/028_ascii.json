@@ -1,0 +1,25 @@
+﻿{
+	"protocolName": "ASCII文字列テスト",
+	"structure": [
+		{
+			"type": "bytes",
+			"size": 1,
+			"name": "Hello byte!"
+		},
+		{
+			"type": "ascii",
+			"size": 3,
+			"name": "ascii3chars"
+		},
+		{
+			"type": "uint8",
+			"size": 1,
+			"name": "uint8 field"
+		},
+		{
+			"type": "uint16",
+			"size": 2,
+			"name": "uint16 field"
+		}
+	]
+}
