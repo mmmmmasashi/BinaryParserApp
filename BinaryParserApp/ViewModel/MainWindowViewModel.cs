@@ -5,6 +5,7 @@ using BinaryParserLib.Protocol;
 using BinaryParserLib.Text;
 using Reactive.Bindings;
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Compression;
 using System.Reactive.Linq;
@@ -21,6 +22,9 @@ namespace BinaryParserApp.ViewModel
         // JSON設定ファイルパス
         public ReactiveProperty<string> JsonFilePath { get; set; }
 
+        // 設定ファイルの候補一覧
+        public ObservableCollection<string> SettingFileCandidates { get; private set; }
+
         // BINファイルパス
         public ReactiveProperty<string> BinFilePath { get; set; }
 
@@ -34,6 +38,14 @@ namespace BinaryParserApp.ViewModel
             // 設定から前回値を復元
             JsonFilePath = new ReactiveProperty<string>(Properties.Settings.Default.JsonFilePath);
             BinFilePath = new ReactiveProperty<string>(Properties.Settings.Default.BinFilePath);
+
+            // ダミーデータとして設定ファイルの候補を追加
+            SettingFileCandidates = new ObservableCollection<string>
+            {
+                @"BinaryParserLibTest/TestData/001_minset.json",
+                @"BinaryParserLibTest/TestData/002_minset.json",
+                @"BinaryParserLibTest/TestData/003_multi_fields.json"
+            };
 
             // 両方のパスが入力されているときだけボタンを有効化
             var canConvert = JsonFilePath
