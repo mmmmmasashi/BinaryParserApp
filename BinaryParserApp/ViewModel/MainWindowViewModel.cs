@@ -99,11 +99,15 @@ namespace BinaryParserApp.ViewModel
 
                 var settingFilePath = PathUtil.RemoveDoubleQuatation(JsonFilePath.Value);
 
-                //設定ファイルが履歴に存在しない場合は、履歴に追加
-                if (!_settingsFileHistory.GetHistory().Contains(settingFilePath))
+                //設定ファイル履歴を更新
                 {
                     _settingsFileHistory.Add(settingFilePath);
-                    SettingFileCandidates.Add(settingFilePath);
+                    SettingFileCandidates.Clear();
+                    foreach (var item in _settingsFileHistory.GetHistory())
+                    {
+                        SettingFileCandidates.Add(item);
+                    }
+                    JsonFilePath.Value = settingFilePath;
 
                     // 履歴を保存
                     var storage = new StringCollection();
