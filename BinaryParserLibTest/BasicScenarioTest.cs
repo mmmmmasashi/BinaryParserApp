@@ -285,4 +285,20 @@ public class BasicScenarioTest
         Assert.Equal("undefined", result.RootFields[1].Name);
         Assert.Equal("3130323033", result.RootFields[1].HexStr);
     }
+    [Fact]
+    public void HEX表示は大文字であること()
+    {
+        var result = ParseBySettingAndBin("003_multi_fields.json", "003_multi_fields.bin");
+        
+        // すべての値が大文字のHEXで表示されることを確認
+        var field1 = result.RootFields[0];
+        Assert.Equal("01", field1.HexStr); // 0x01の場合
+
+        var field2 = result.RootFields[1];
+        Assert.Equal("0203", field2.HexStr); // 0x02, 0x03の場合
+
+        // a-fの範囲の値でも大文字で表示されることを確認
+        var fieldWithAF = new Field(null, "test", new byte[] { 0xab, 0xcd, 0xef }, null);
+        Assert.Equal("ABCDEF", fieldWithAF.HexStr);
+    }
 }
